@@ -325,6 +325,8 @@ body:not(.ro) .tvr[data-id]:hover{border-color:var(--muted);border-left-color:va
 .cllist{max-height:340px;overflow:auto;display:flex;flex-direction:column}
 .tvr .op .crest{width:22px;height:22px}.tvr .op .crest.gen{font-size:9px;width:22px;height:22px;line-height:22px;vertical-align:-.3em}
 .mc-opp .crest{width:22px;height:22px}.mc-opp .crest.gen{font-size:9px;width:22px;height:22px;line-height:22px;vertical-align:-.3em}
+body.ro #mo-add,body.ro #mo [data-edit]{display:none!important}
+body.ro #mo .mres input,body.ro #mo .kit,body.ro #mo .refb,body.ro #ck .seg{pointer-events:none}
 @media print{
   @page{size:A4 landscape;margin:0}
   body{background:#fff;padding:0}
@@ -352,7 +354,7 @@ body:not(.ro) .tvr[data-id]:hover{border-color:var(--muted);border-left-color:va
       <div class="row"><button id="pdf" class="btn pri">Download A4 PDF</button><button id="wa" class="btn wa">WhatsApp message</button><button id="csv" class="btn">Excel (.xlsx)</button><button id="ics" class="btn">Calendar (.ics)</button></div>
     </div>
   </div>
-  <div class="tabs" role="tablist" aria-label="View"><button id="tab-cal" role="tab" aria-selected="true">Calendar A4</button><button id="tab-tv" role="tab" aria-selected="false">Team results</button><button id="tab-mo" class="edit-only" role="tab" aria-selected="false">Matches organization</button></div>
+  <div class="tabs" role="tablist" aria-label="View"><button id="tab-cal" role="tab" aria-selected="true">Calendar A4</button><button id="tab-tv" role="tab" aria-selected="false">Team results</button><button id="tab-mo" role="tab" aria-selected="false">Matches organization</button></div>
   <nav class="months" id="months"></nav>
   <div class="note edit-only" id="exnote" hidden>
     <span>There are 3 sample matches in October so you can see how it looks.</span>
@@ -1116,7 +1118,7 @@ async function boot(){
     if(u){who='viewer';let o=false,c=false;try{o=await u.isOwner()}catch(e){}try{c=await u.canEdit()}catch(e){}owner=!!(o||c);if(owner)who=o?'owner':'editor'}}}catch(e){owner=false}
   {const n=$('#accnote');$('#accbox').hidden=owner;if(n){n.textContent=who==='none'?'View only · Editors: open this page signed in to Claude with the invited email, then reload.':'View only · Your Claude account can only view this calendar. Ask the owner to give this email edit access in Share, then reload.'}}
   document.body.classList.toggle('ro',!owner);
-  if(owner&&location.hash==='#matches')showMO(true);
+  if(location.hash==='#matches')showMO(true);
   if(location.hash==='#team')showTV(true);
   if(!owner&&remote){S=remote;S.matches=S.matches||[];if(!S.comps)S.comps=DEFAULT_COMPS.map(c=>({...c}));try{localStorage.removeItem(LSKEY)}catch(e){}render();fetch('logos.json').then(r=>r.ok?r.json():null).then(L=>{if(!L)return;if(!S.logo&&L.logo)S.logo=L.logo;(S.comps||[]).forEach(c=>{if(!c.logo&&L.comps&&L.comps[c.id])c.logo=L.comps[c.id]});render();if(tvOn)renderTV()}).catch(()=>{})}
   if(owner){try{art=await window.claude.use('artifact');setStatus(art?'':'· Changes are saved in this browser.')}catch(e){art=null}}
