@@ -273,6 +273,9 @@ body.mo-on #pages,body.mo-on #months,body.mo-on #teams,body.mo-on #clubsbox,body
 .chip.tour .tl{white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis;display:block;letter-spacing:.02em}
 .chip.tour .hc{flex-wrap:nowrap!important;flex:none;padding:calc(var(--mm)*.15)!important;order:1}
 .chip.tour .flg{font-size:.95em}
+.chip.tour{background:var(--tb,#1C2A5E)!important;color:var(--tf,#F2C230)!important;box-shadow:inset 0 0 0 calc(var(--mm)*.35) #F2C230!important}
+.chip.tour .hc{order:-1!important}
+.chip.tour .hc b{background:#F2C230!important;color:#1C2A5E!important}
 .chip.pend{outline:calc(var(--mm)*.35) dashed var(--tinta);outline-offset:calc(var(--mm)*-.35);opacity:.92}
 .pdg{flex:none;font-weight:800;font-size:.7em;letter-spacing:.06em;padding:0 .4em;border-radius:.3em;background:#FFE39A;color:#5A4300;line-height:1.4}
 .day.we .chip .pdg{order:1}
@@ -521,10 +524,10 @@ function chip(m){
 function dayChips(list,k){
   const hol=list.filter(m=>m.type==='holiday'), tours=list.filter(m=>m.type==='tour'), rest=list.filter(m=>!isSpan(m)).sort(sortM);
   let h='';
-  const byName={};tours.forEach(m=>{const n=(m.name||'International tournament').trim();(byName[n]=byName[n]||[]).push(m)});
-  for(const [n,ms] of Object.entries(byName)){
-    const seen=new Set();const tags=ms.slice().sort(sortM).filter(m=>{const t=teamLabel(m);if(seen.has(t))return false;seen.add(t);return true}).map(m=>{const g=gen(m.gen);const b=g?(m.filial?light(g.color):g.color):'#F2C230';return `<b style="--hb:${b};--hf:${ink(b)}">${esc(g?teamLabel(m):'ALL')}</b>`}).join('');
-    h+=`<button class="chip hol tour" data-hday="${k}" title="${esc(n)}"><span class="hc">${tags}</span><span class="bd"><span class="tl">🏆 ${flagHtml((ms.find(x=>x.cc)||{}).cc)} ${esc(n)}${(()=>{const x=ms.find(y=>y.city||y.treg);return x?' · '+esc(x.city||x.treg):''})()}</span></span></button>`;
+  const byName={};tours.forEach(m=>{const n=(m.name||'International tournament').trim();const key=n+'\u0001'+(m.gen||'')+'|'+(m.filial?1:0);(byName[key]=byName[key]||[]).push(m)});
+  for(const [key,ms] of Object.entries(byName)){
+    const n=key.split('\u0001')[0];const m0=ms[0];const g=gen(m0.gen);const bg=g?(m0.filial?light(g.color):g.color):'#1C2A5E';const fg=ink(bg);const code=g?teamLabel(m0):'ALL';
+    h+=`<button class="chip hol tour" data-hday="${k}" title="${esc(code+' · '+n)}" style="--tb:${bg};--tf:${fg}"><span class="hc"><b>${esc(code)}</b></span><span class="bd"><span class="tl">🏆 ${flagHtml((ms.find(x=>x.cc)||{}).cc)} ${esc(n)}${(()=>{const x=ms.find(y=>y.city||y.treg);return x?' · '+esc(x.city||x.treg):''})()}</span></span></button>`;
   }
   if(hol.length){
     const seen=new Set();const tags=hol.slice().sort(sortM).filter(m=>{const t=teamLabel(m);if(seen.has(t))return false;seen.add(t);return true}).map(m=>{const g=gen(m.gen);const b=g?(m.filial?g.color:dark(g.color)):'#5A4300';return `<b style="--hb:${b};--hf:${ink(b)}">${esc(g?teamLabel(m):'ALL')}</b>`}).join('');
