@@ -1,0 +1,1127 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Kazakhstan Academy · Match Calendar 26/27</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600&family=Noto+Color+Emoji&display=swap">
+<style>
+/* Layout (rev. Nov 2026): one A4 sheet per month, stacked; weekend columns wider because that's where the matches live. */
+:root{
+  /* paper (fixed: it's a printed sheet in both themes) */
+  --rojo:#CB3234; --azul:#1C2A5E; --papel:#FFFFFF; --tinta:#191C2B; --linea:#D5D8E2; --finde:#FBF0F0; --fuera:#F3F4F7; --tenue:#7A8095;
+  /* app chrome */
+  --bg:#E9EBF1; --fg:#191C2B; --panel:#FFFFFF; --muted:#5B6278; --borde:#D3D6E0; --accent:#CB3234; --accent-fg:#FFFFFF; --sel:#1C2A5E;
+  --f-disp:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"Barlow","Segoe UI",Roboto,Arial,sans-serif;
+  --cols: repeat(5, .85fr) 1.75fr 1.75fr;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#11131B;--fg:#E7E9F0;--panel:#1B1E2A;--muted:#9AA0B5;--borde:#2E3242;--accent:#E0474A;--accent-fg:#FFFFFF;--sel:#8FA2E8;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#11131B;--fg:#E7E9F0;--panel:#1B1E2A;--muted:#9AA0B5;--borde:#2E3242;--accent:#E0474A;--accent-fg:#FFFFFF;--sel:#8FA2E8;color-scheme:dark}
+
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;padding-inline:16px;padding-block:0 48px}
+*{box-sizing:border-box}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--sel);outline-offset:2px}
+
+/* ---------- toolbar ---------- */
+.bar{max-width:840px;margin:0 auto;padding-block:18px 14px;display:flex;flex-direction:column;gap:12px}
+.bar h1{font-family:var(--f-disp);font-weight:800;font-size:28px;letter-spacing:.01em;margin:0;text-transform:uppercase;line-height:1}
+.bar h1 span{color:var(--accent)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label,.lbl{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.inp{background:var(--panel);border:1px solid var(--borde);border-radius:6px;padding:8px 10px;min-width:0}
+.btn{border:1px solid var(--borde);background:var(--panel);border-radius:6px;padding:8px 12px;cursor:pointer;font-weight:600}
+.btn:hover{border-color:var(--muted)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.btn.warn{color:var(--accent)}
+.btn:disabled{opacity:.5;cursor:default}
+.status{font-size:13px;color:var(--muted)}
+.months{display:flex;flex-wrap:wrap;gap:6px}
+.months a{font-family:var(--f-disp);font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:14px;text-decoration:none;color:var(--fg);padding:4px 9px;border:1px solid var(--borde);border-radius:999px;background:var(--panel)}
+.months a:hover{border-color:var(--accent);color:var(--accent)}
+.note{background:var(--panel);border:1px solid var(--borde);border-radius:8px;padding:10px 12px;font-size:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+details.teams{background:var(--panel);border:1px solid var(--borde);border-radius:8px}
+details.teams summary{cursor:pointer;padding:10px 12px;font-weight:600}
+.tlist{padding:0 12px 12px;display:flex;flex-direction:column;gap:8px}
+.trow{display:grid;grid-template-columns:28px 64px minmax(0,1fr) 40px auto auto;gap:8px;align-items:center}
+.trow input[type=color]{width:40px;height:34px;padding:2px;border:1px solid var(--borde);border-radius:6px;background:var(--panel)}
+.sw{display:flex;gap:2px}
+.sw i{width:12px;height:22px;border-radius:2px;display:block}
+.chk{display:flex;gap:5px;align-items:center;font-size:13px;white-space:nowrap}
+.hint{font-size:13px;color:var(--muted);margin:0}
+@media (max-width:560px){.trow{grid-template-columns:28px 56px minmax(0,1fr) 40px;}.trow .chk,.trow .del{grid-column:span 2}}
+
+/* ---------- A4 sheets ---------- */
+.pages{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+.page{container-type:inline-size;width:100%;aspect-ratio:297/210;background:var(--papel);color:var(--tinta);box-shadow:0 1px 2px rgba(10,15,40,.12),0 8px 28px rgba(10,15,40,.12);position:relative;scroll-margin-top:12px;max-width:100%}
+.sheet{--mm:calc(100cqw / 297);position:absolute;inset:0;padding:calc(var(--mm)*7) calc(var(--mm)*9) calc(var(--mm)*6);display:flex;flex-direction:column;gap:calc(var(--mm)*2.4);font-size:calc(var(--mm)*2.6)}
+
+.hd{display:grid;grid-template-columns:1fr auto;gap:calc(var(--mm)*5);align-items:center;height:calc(var(--mm)*17)}
+.hd .club{font-family:var(--f-disp);font-weight:600;text-transform:uppercase;letter-spacing:.14em;font-size:calc(var(--mm)*3.2);color:var(--rojo);min-height:1em}
+.hd .mes{font-family:var(--f-disp);font-weight:800;text-transform:uppercase;color:var(--azul);font-size:calc(var(--mm)*11.5);line-height:.85;letter-spacing:-.005em;margin-top:calc(var(--mm)*1)}
+.hd .anio{color:var(--rojo)}
+.hd .sub{font-family:var(--f-disp);font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tenue);font-size:calc(var(--mm)*2.6);margin-top:calc(var(--mm)*1.4)}
+.logo{width:calc(var(--mm)*30);height:calc(var(--mm)*17);display:flex;align-items:center;justify-content:flex-end;overflow:hidden}
+.logo img{width:auto;height:calc(var(--mm)*16.5);max-width:calc(var(--mm)*30);object-fit:contain;display:block}
+.logoph{all:unset;cursor:pointer;box-sizing:border-box;width:100%;height:100%;border:calc(var(--mm)*.4) dashed var(--linea);border-radius:calc(var(--mm)*1.2);display:flex;align-items:center;justify-content:center;font-family:var(--f-disp);font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:calc(var(--mm)*2.6);color:var(--tenue)}
+body.exporting .logoph{visibility:hidden}
+.lgt{font-family:var(--f-disp);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:calc(var(--mm)*2.1);color:var(--azul);margin-bottom:calc(var(--mm)*1)}
+.legend{display:grid;grid-template-columns:1.1fr 1fr;gap:calc(var(--mm)*8);align-items:start}
+.ft{flex-direction:column;gap:calc(var(--mm)*.6)}
+.ft div{display:flex;justify-content:space-between;gap:calc(var(--mm)*2)}
+.flag{width:calc(var(--mm)*44);height:100%;display:flex;flex-direction:column;border-radius:calc(var(--mm)*1);overflow:hidden;border:calc(var(--mm)*.35) solid var(--azul)}
+.flag b{background:var(--azul);color:#fff;font-family:var(--f-disp);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:calc(var(--mm)*3);padding:calc(var(--mm)*1.4) calc(var(--mm)*2.4);display:flex;justify-content:space-between}
+.flag span{flex:1;background:repeating-linear-gradient(90deg,var(--rojo) 0 calc(var(--mm)*4.9),#fff calc(var(--mm)*4.9) calc(var(--mm)*9.8))}
+
+.cal{flex:1;min-height:0;display:flex;flex-direction:column;border:calc(var(--mm)*.35) solid var(--azul)}
+.dow{display:grid;grid-template-columns:var(--cols);background:var(--azul);color:#fff;font-family:var(--f-disp);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:calc(var(--mm)*2.7)}
+.dow div{padding:calc(var(--mm)*1.2) calc(var(--mm)*1.6)}
+.dow .we{background:var(--rojo)}
+.week{flex:1 1 0;min-height:0;display:grid;grid-template-columns:var(--cols);grid-template-rows:minmax(0,1fr) auto;border-top:calc(var(--mm)*.25) solid var(--linea)}
+.week:first-of-type{border-top:0}
+.day{grid-row:1 / span 2;min-width:0;min-height:0;border-left:calc(var(--mm)*.25) solid var(--linea);padding:calc(var(--mm)*.9);display:flex;flex-direction:column;gap:calc(var(--mm)*.6);cursor:pointer;position:relative}
+.day:first-child{border-left:0}
+.day.we{grid-row:1;background:var(--finde)}
+.day.out{background:var(--fuera)}
+.day.out .chip{opacity:.8}
+.day.out .num{color:#B9BDCB}
+.day:hover{box-shadow:inset 0 0 0 calc(var(--mm)*.4) var(--rojo)}
+.num{font-family:var(--f-disp);font-weight:700;font-size:calc(var(--mm)*3.6);line-height:1;color:var(--azul)}
+.day.we .num{color:var(--rojo)}
+.evs{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;gap:calc(var(--mm)*.45)}
+.band{grid-column:6 / span 2;grid-row:2;border-left:calc(var(--mm)*.25) solid var(--linea);border-top:calc(var(--mm)*.3) dashed var(--rojo);background:#fff;padding:calc(var(--mm)*.9);display:flex;flex-direction:column;gap:calc(var(--mm)*.5)}
+.band .tag{font-family:var(--f-disp);font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:calc(var(--mm)*2);color:var(--rojo)}
+.day.we .chip .bd{flex-direction:row;align-items:center;gap:calc(var(--mm)*.8);flex-wrap:nowrap}
+.day.we .chip .r1{display:contents}
+.day.we .chip .ha{order:1}.day.we .chip .cp{order:2}.day.we .chip .rv{order:3;flex:1 1 auto}.day.we .chip .tm{order:4;margin-left:0}.day.we .chip.tr .tl{order:3;flex:1 1 auto}
+.chip.hol{flex-wrap:wrap;align-items:center}
+.chip.hol .bd{flex:none!important;order:-1}
+.chip.hol .bd{flex-wrap:wrap}
+.chip.hol .hc{flex-wrap:wrap;display:flex;gap:calc(var(--mm)*.4);padding:calc(var(--mm)*.25);align-items:center}
+.chip.hol .hc b{background:var(--hb);color:var(--hf);padding:0 calc(var(--mm)*.5);border-radius:calc(var(--mm)*.3);font-weight:800}
+.band .evs{display:grid;grid-template-columns:1fr 1fr;flex:none;overflow:visible}
+
+.chip{all:unset;box-sizing:border-box;display:flex;align-items:stretch;background:var(--c);color:var(--cf);border-radius:calc(var(--mm)*.7);font-family:var(--f-disp);font-weight:600;font-size:calc(var(--mm)*2.9);line-height:1.15;cursor:pointer;min-width:0;flex:none;overflow:hidden}
+.chip .bd{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:calc(var(--mm)*.35);padding:calc(var(--mm)*.5) calc(var(--mm)*.8)}
+.chip .r1{display:flex;align-items:center;gap:calc(var(--mm)*.7);min-width:0}
+.chip .r1 .tm{margin-left:auto}
+.day.narrow .chip{flex-direction:column}
+.day.narrow .chip .cd{justify-content:center}
+.chip .tl{font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.chip.hol{background:repeating-linear-gradient(45deg,#FFF1C9 0 calc(var(--mm)*1.2),#FFE39A calc(var(--mm)*1.2) calc(var(--mm)*2.4));color:#5A4300;box-shadow:inset 0 0 0 calc(var(--mm)*.3) #E0B43A}
+.chip.hol{font-size:calc(var(--mm)*2.1);line-height:1.1;border-radius:calc(var(--mm)*.5)}
+.chip.hol .bd{flex-direction:row;align-items:center;padding:calc(var(--mm)*.2) calc(var(--mm)*.6)}
+.chip.hol .cd{padding:calc(var(--mm)*.2) calc(var(--mm)*.6)}
+.chip.hol .tl{letter-spacing:.08em}
+.day.narrow .chip.hol{flex-direction:row}
+.chip:focus-visible{outline:calc(var(--mm)*.4) solid var(--azul)}
+.chip .cd{background:var(--b);color:var(--bf);font-weight:800;padding:calc(var(--mm)*.4) calc(var(--mm)*.8);display:flex;align-items:center;letter-spacing:.02em}
+.chip .rv{min-width:0;white-space:normal;overflow-wrap:anywhere;font-weight:700}
+.chip .nt{font-weight:500;opacity:.85}
+.chip .cd{flex:none}
+.ha{flex:none;font-weight:800;font-size:.74em;letter-spacing:.06em;padding:0 .45em;border-radius:.35em;line-height:1.45}
+.ha.h{background:#FFFFFF;color:#191C2B;box-shadow:inset 0 0 0 .09em #191C2B}
+.ha.a{background:#191C2B;color:#FFFFFF}
+.ha u{display:none;text-decoration:none}
+.day.narrow .ha i{display:none}.day.narrow .ha u{display:inline}
+.ha i{font-style:normal}
+.vn{flex:none;font-weight:800;font-size:.72em;letter-spacing:.06em;line-height:1.35;padding:0 .4em;border-radius:.3em;border:.09em dashed currentColor;align-self:flex-start;white-space:nowrap}
+.day.we .chip .vn{order:1;align-self:center}
+.day.narrow .chip .bd{flex-direction:row;flex-wrap:wrap;align-items:center;column-gap:calc(var(--mm)*.6)}
+.day.narrow .chip .r1{flex-basis:100%}
+.day.narrow .chip .vn{align-self:center}
+.day.narrow .chip .rv{flex:1 1 auto}
+.cp{flex:none;height:calc(var(--mm)*4.6);display:flex;align-items:center}
+.cp img{height:100%;width:auto;max-width:calc(var(--mm)*10);object-fit:contain;display:block}
+.cp b{font-size:.7em;font-weight:800;letter-spacing:.04em;border:.09em solid currentColor;border-radius:.3em;padding:0 .3em;line-height:1.4}
+.lg .cpl{height:calc(var(--mm)*4.6);width:auto;max-width:calc(var(--mm)*9);object-fit:contain;flex:none}
+.lg .cpt{font-size:.8em;font-weight:800;border:calc(var(--mm)*.25) solid var(--azul);color:var(--azul);border-radius:calc(var(--mm)*.5);padding:0 calc(var(--mm)*.6);flex:none}
+.lg .hap{display:inline-block;margin-right:calc(var(--mm)*.6)}
+.crow{display:grid;grid-template-columns:44px 64px minmax(0,1fr) auto auto;gap:8px;align-items:center}
+.crow .pv{width:44px;height:34px;border:1px dashed var(--borde);border-radius:6px;display:flex;align-items:center;justify-content:center;background:#FFFFFF;overflow:hidden;font-size:11px;color:#7A8095}
+.crow .pv img{max-width:100%;max-height:100%;object-fit:contain}
+@media (max-width:560px){.crow{grid-template-columns:44px 56px minmax(0,1fr)}.crow .btn{grid-column:span 1}}
+.chip .tm{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:700}
+.chip .tm small{font-size:.82em;opacity:.8;margin-left:.25em}
+.chip.tr{box-shadow:inset 0 0 0 calc(var(--mm)*.35) var(--bd)}
+.chip.tr .rv{font-weight:500}
+.chip.pd .tm{font-style:italic;font-weight:600;opacity:.9}
+.page.t1 .chip{font-size:calc(var(--mm)*2.5)}.page.t1 .cp{height:calc(var(--mm)*3.9)}
+.page.t2 .chip{font-size:calc(var(--mm)*2.2)}.page.t2 .cp{height:calc(var(--mm)*3.4)}.page.t2 .evs{gap:calc(var(--mm)*.3)}
+.page.t3 .chip{font-size:calc(var(--mm)*1.95)}.page.t3 .cp{height:calc(var(--mm)*3)}.page.t3 .evs{gap:calc(var(--mm)*.25)}.page.t3 .chip .bd{padding:calc(var(--mm)*.3) calc(var(--mm)*.6)}
+.more{all:unset;font-family:var(--f-disp);font-weight:700;font-size:calc(var(--mm)*2.2);color:var(--azul);cursor:pointer;text-decoration:underline}
+.day.narrow .chip .tm small{display:none}
+
+.lg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:calc(var(--mm)*1) calc(var(--mm)*3);font-size:calc(var(--mm)*2.3);font-family:var(--f-disp);font-weight:600}
+.lg div{display:flex;align-items:center;gap:calc(var(--mm)*1);min-width:0}
+.lg i{width:calc(var(--mm)*3.2);height:calc(var(--mm)*3.2);border-radius:calc(var(--mm)*.5);flex:none}
+.lg span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lg em{font-style:normal;color:var(--tenue);margin-left:auto;padding-left:calc(var(--mm)*1)}
+.ft{display:flex;justify-content:space-between;font-family:var(--f-disp);font-weight:600;letter-spacing:.1em;text-transform:uppercase;font-size:calc(var(--mm)*2);color:var(--tenue);border-top:calc(var(--mm)*.25) solid var(--linea);padding-top:calc(var(--mm)*1.4)}
+
+body.ro .edit-only{display:none!important}
+body.ro .day,body.ro .chip{cursor:default}
+body.ro .day:hover{box-shadow:none}
+body.ro .logoph{visibility:hidden}
+body.exporting .page{width:1123px;max-width:none;box-shadow:none}
+body.exporting .day:hover{box-shadow:none}
+
+/* ---------- dialog ---------- */
+.ov{position:fixed;inset:0;background:rgba(10,12,25,.5);display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
+.dlg{background:var(--panel);color:var(--fg);border-radius:10px;width:min(460px,100%);max-height:calc(100% - 32px);overflow:auto;padding:18px;display:flex;flex-direction:column;gap:14px;box-shadow:0 18px 50px rgba(0,0,0,.35)}
+.dlg h2{margin:0;font-family:var(--f-disp);font-weight:800;text-transform:uppercase;font-size:24px;line-height:1.05}
+.dlg h2 small{display:block;font-size:14px;color:var(--muted);letter-spacing:.06em;font-weight:600;margin-top:4px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opp{display:grid;grid-template-columns:minmax(0,1fr) 92px 70px;gap:8px}
+.opv{font-size:13px;color:var(--muted)}
+.opv b{color:var(--fg)}
+.seg{display:flex;border:1px solid var(--borde);border-radius:6px;overflow:hidden}
+.seg label{flex:1;text-align:center;padding:8px;cursor:pointer;font-weight:600;font-size:14px}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label:has(input:checked){background:var(--sel);color:var(--panel)}
+.daylist{display:flex;flex-direction:column;gap:6px}
+.daylist button{all:unset;cursor:pointer;display:flex;gap:10px;align-items:center;padding:8px 10px;border:1px solid var(--borde);border-radius:6px}
+.daylist button:hover{border-color:var(--muted)}
+.daylist i{width:14px;height:28px;border-radius:3px;flex:none}
+.daylist .t{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--muted);font-size:14px}
+.acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.acts .sp{flex:1}
+.busy{position:fixed;inset:0;background:rgba(10,12,25,.55);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--f-disp);font-size:22px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;z-index:20}
+/* ---------- WhatsApp message ---------- */
+.dlg.wide{width:min(720px,100%)}
+.msgbox{white-space:pre-wrap;overflow-wrap:anywhere;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.5;background:var(--bg);border:1px solid var(--borde);border-radius:8px;padding:10px 12px;max-height:42vh;overflow:auto}
+.kitrows{display:flex;flex-direction:column}
+.kitrow{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 10px;align-items:center;border-bottom:1px solid var(--borde);padding-block:7px}
+.kitrow:last-child{border-bottom:0}
+.kitrow .who{font-weight:600;min-width:0}
+.kitrow .who small{display:block;color:var(--muted);font-weight:500;font-size:13px}
+.kits{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.kit,.refb{border:1px solid var(--borde);background:var(--panel);border-radius:999px;padding:3px 10px 3px 4px;font-size:13px;font-weight:600;display:inline-flex;gap:5px;align-items:center;cursor:pointer}
+.refb{padding:3px 10px}
+.kit[aria-pressed="true"],.refb[aria-pressed="true"]{background:var(--sel);border-color:var(--sel);color:var(--panel);box-shadow:0 0 0 2px var(--sel)}
+.kit[aria-pressed="true"] .ksw{border-color:var(--panel)}
+.ksw{width:16px;height:16px;border-radius:50%;border:1px solid rgba(0,0,0,.25);flex:none;display:inline-block}
+.ksw.rw{background:repeating-linear-gradient(90deg,#CB3234 0 3px,#FFFFFF 3px 6px)}
+.ksw.db{background:#1C2A5E}
+.ksw.r{background:#CB3234}
+.ksw.tk{background:repeating-linear-gradient(45deg,#E9C93B 0 3px,#3B3F4F 3px 6px)}
+.btn.wa{background:#128C4A;border-color:#128C4A;color:#FFFFFF;text-decoration:none;display:inline-flex;align-items:center}
+.wa-miss{color:var(--accent);font-weight:600}
+
+/* ---------- Matches organization view ---------- */
+.tabs{max-width:1200px;margin:0 auto 14px;display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{border:1px solid var(--borde);background:var(--panel);border-radius:999px;padding:7px 14px;font-family:var(--f-disp);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:15px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--sel);border-color:var(--sel);color:var(--panel)}
+#mo{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
+@media (max-width:900px){#mo{grid-template-columns:minmax(0,1fr)}}
+.mo-head{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;justify-content:space-between;margin-bottom:12px}
+.mo-head h2{margin:0;font-family:var(--f-disp);font-weight:800;font-size:28px;line-height:1;text-transform:uppercase}
+.mo-head h2 span{color:var(--accent)}
+.mo-ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end}
+.mo-cards{display:flex;flex-direction:column;gap:10px}
+.mo-day{font-family:var(--f-disp);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.mcard{background:var(--panel);border:1px solid var(--borde);border-left:6px solid var(--tc);border-radius:10px;padding:12px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 14px}
+.mc-team{font-family:var(--f-disp);font-weight:800;font-size:21px;line-height:1.05;text-transform:uppercase}
+.mc-team .code{display:inline-block;font-size:13px;padding:1px 7px;border-radius:5px;background:var(--tc);color:var(--tf);vertical-align:middle;margin-left:4px;letter-spacing:.04em}
+.mc-opp{font-weight:600}
+.mc-meta{color:var(--muted);font-size:14px}
+.mc-time{font-family:var(--f-disp);font-weight:700;font-size:26px;line-height:1;text-align:right;font-variant-numeric:tabular-nums}
+.mc-time small{display:block;font-family:var(--f-body);font-size:12px;font-weight:500;color:var(--muted);margin-top:2px}
+.mc-row{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:4px}
+.mc-row .sp{flex:1}
+.mc-row a{font-size:13px;color:var(--fg);overflow-wrap:anywhere}
+.pill.warn{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:#FFF1C9;color:#7A5600}
+.mo-empty{border:1.5px dashed var(--borde);border-radius:10px;padding:26px 16px;text-align:center;color:var(--muted)}
+.mo-side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);display:flex;flex-direction:column;gap:12px}
+@media (max-width:900px){.mo-side{position:static}}
+.mo-panel{background:var(--panel);border:1px solid var(--borde);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.mo-panel .msgbox{max-height:52vh}
+.ckrows{display:flex;flex-direction:column;gap:6px}
+.ckrow{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.ckrow b{font-weight:600}
+.ckrow .seg label{padding:5px 10px;font-size:13px;white-space:nowrap}
+.mc-head{display:flex;justify-content:space-between;align-items:center}
+.mc-head b{font-family:var(--f-disp);font-weight:800;font-size:20px;text-transform:uppercase;letter-spacing:.03em}
+.mc-head .btn{padding:4px 10px}
+.resin{display:flex;align-items:center;gap:8px}.resin input{width:70px;text-align:center;font-weight:700}.resin span{font-size:13px;color:var(--muted);font-weight:600}
+.chip .sc{font-weight:800;padding:0 .4em;border-radius:.3em;background:var(--panel);color:var(--tinta);white-space:nowrap;font-variant-numeric:tabular-nums}
+.day.we .chip .sc{order:4}
+.chip .sc.W{box-shadow:inset 0 0 0 .1em #1F7A4D}.chip .sc.L{box-shadow:inset 0 0 0 .1em #CB3234}
+.mres{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:600}.mres input{width:52px;text-align:center;font-weight:800;padding:5px 4px}
+.wdl{font-weight:800;font-size:12px;padding:2px 8px;border-radius:999px;color:#fff}.wdl.W{background:#1F7A4D}.wdl.D{background:#7A8095}.wdl.L{background:#CB3234}
+.mcal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;font-variant-numeric:tabular-nums}
+.mcal .wd{font-size:11px;font-weight:700;text-align:center;color:var(--muted)}
+.mcal button{all:unset;box-sizing:border-box;aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:7px;font-size:14px;cursor:pointer;position:relative;border:1px solid transparent}
+.mcal button:hover{border-color:var(--sel)}
+.mcal button:focus-visible{outline:2px solid var(--sel)}
+.mcal button.out{opacity:.4}
+.mcal button.we{color:var(--accent)}
+.mcal button.has{font-weight:800}
+.mcal button.has::after{content:"";position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.mcal button.inr{background:var(--bg)}
+.mcal button.sel{background:var(--sel);color:var(--panel)}
+.mcal button.sel::after{background:var(--panel)}
+.mcal button.today{border-color:var(--borde)}
+body.mo-on #pages,body.mo-on #months,body.mo-on #teams,body.mo-on #clubsbox,body.mo-on #compsbox,body.mo-on .bar>p.hint{display:none}
+.accbox{max-width:1200px;margin:0 auto 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}
+.accbox .accnote{margin:0}
+.accnote{max-width:1200px;margin:0 auto 12px;font-size:13px;color:var(--muted);text-align:center}
+.chip.tour{background:#1C2A5E;color:#F2C230;box-shadow:inset 0 0 0 calc(var(--mm)*.3) #F2C230}
+.chip.tour .tl{letter-spacing:.04em;text-transform:uppercase;white-space:normal}
+.chip.tour .bd{flex:1 1 auto!important;min-width:0}
+.chip.tour{flex-wrap:nowrap!important;font-size:calc(var(--mm)*1.85)!important;line-height:1.05;flex:none}
+.chip.tour .bd{order:0!important;padding:calc(var(--mm)*.15) calc(var(--mm)*.5)!important;overflow:hidden}
+.chip.tour .tl{white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis;display:block;letter-spacing:.02em}
+.chip.tour .hc{flex-wrap:nowrap!important;flex:none;padding:calc(var(--mm)*.15)!important;order:1}
+.chip.tour .flg{font-size:.95em}
+.chip.pend{outline:calc(var(--mm)*.35) dashed var(--tinta);outline-offset:calc(var(--mm)*-.35);opacity:.92}
+.pdg{flex:none;font-weight:800;font-size:.7em;letter-spacing:.06em;padding:0 .4em;border-radius:.3em;background:#FFE39A;color:#5A4300;line-height:1.4}
+.day.we .chip .pdg{order:1}
+.lg .tlg{flex:none;background:#1C2A5E;color:#F2C230;border-radius:calc(var(--mm)*.6);padding:0 calc(var(--mm)*.8);box-shadow:inset 0 0 0 calc(var(--mm)*.25) #F2C230;line-height:1.5}
+.flg{font-family:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif;font-weight:400;letter-spacing:0;text-transform:none}
+.flgsel{font-family:var(--f-body),"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif}
+.mo-tour{background:#1C2A5E;color:#F2C230;border-radius:8px;padding:8px 12px;margin-bottom:8px;font-size:14px}.mo-tour b{color:#fff}
+.mc-pend{font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px;background:#FFE39A;color:#5A4300}
+/* ---------- Team results view ---------- */
+#tv{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+body.tv-on #pages,body.tv-on #months,body.tv-on #teams,body.tv-on #clubsbox,body.tv-on #compsbox,body.tv-on .bar>p.hint{display:none}
+.tv-head{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:space-between}
+.tv-head h2{margin:0;font-family:var(--f-disp);font-weight:800;font-size:28px;line-height:1;text-transform:uppercase}
+.tv-head h2 span{color:var(--accent)}
+.tv-head select{min-width:260px}
+.tv-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:8px}
+.tv-st{background:var(--panel);border:1px solid var(--borde);border-radius:10px;padding:10px 12px}
+.tv-st b{display:block;font-family:var(--f-disp);font-weight:800;font-size:28px;line-height:1;font-variant-numeric:tabular-nums}
+.tv-st span{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tv-st.form{grid-column:span 2}.tv-st.form b{display:flex;gap:4px;font-size:15px;line-height:28px;flex-wrap:wrap}.tv-st.form .wdl{width:26px;height:26px;padding:0;display:inline-flex;align-items:center;justify-content:center;font-size:13px;line-height:1;color:#fff!important}
+.tv-cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+@media (max-width:820px){.tv-cols{grid-template-columns:1fr}}
+.tv-cols h3{margin:0 0 8px;font-family:var(--f-disp);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-size:16px}
+.tv-list{display:flex;flex-direction:column;gap:8px}
+.tvr{all:unset;box-sizing:border-box;display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:4px 12px;align-items:center;background:var(--panel);border:1px solid var(--borde);border-left:5px solid var(--tc);border-radius:10px;padding:10px 12px;cursor:default}
+body:not(.ro) .tvr[data-id]{cursor:pointer}
+body:not(.ro) .tvr[data-id]:hover{border-color:var(--muted);border-left-color:var(--tc)}
+.tvr .dt{font-family:var(--f-disp);font-weight:700;line-height:1.05;text-transform:uppercase;font-size:15px}
+.tvr .dt small{display:block;font-family:var(--f-body);font-size:12px;font-weight:500;color:var(--muted);text-transform:none}
+.tvr .op{font-weight:600;min-width:0;overflow-wrap:anywhere}
+.tvr .op small{display:block;font-weight:500;font-size:13px;color:var(--muted)}
+.tvr .rs{font-family:var(--f-disp);font-weight:800;font-size:20px;font-variant-numeric:tabular-nums;display:flex;gap:6px;align-items:center;white-space:nowrap}
+.tvr .tmx{font-family:var(--f-disp);font-weight:700;font-size:18px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.tvr .hb{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.06em;padding:0 6px;border-radius:4px;margin-right:4px;vertical-align:1px}
+.tvr .hb.h{box-shadow:inset 0 0 0 1px currentColor}.tvr .hb.a{background:var(--fg);color:var(--panel)}
+.tvr .tcd{display:inline-block;font-size:11px;font-weight:800;padding:0 6px;border-radius:4px;background:var(--tc);color:var(--tf);margin-right:4px;vertical-align:1px}
+.tvr.tour{background:#1C2A5E;color:#F2C230;border-color:#1C2A5E}.tvr.tour .op small,.tvr.tour .dt small{color:#E8E2C0}
+.tvr .nr{font-size:12px;font-weight:600;color:var(--muted)}
+.tv-empty{border:1.5px dashed var(--borde);border-radius:10px;padding:20px 14px;text-align:center;color:var(--muted)}
+.crest{display:inline-block;width:1.25em;height:1.25em;object-fit:contain;vertical-align:-.25em;margin-right:.3em;flex:none}
+.crest.gen{border-radius:50%;background:hsl(var(--ch) 55% 38%);color:#fff;font-size:.62em;width:2em;height:2em;line-height:2em;text-align:center;font-weight:800;letter-spacing:0;vertical-align:.1em;box-shadow:inset 0 0 0 .14em hsl(var(--ch) 60% 70%)}
+.chip .crest{width:1.15em;height:1.15em;margin-right:.25em}.chip .crest.gen{font-size:.55em;width:2.1em;height:2.1em;line-height:2.1em}
+.opp{grid-template-columns:minmax(0,1.1fr) minmax(0,1.6fr) 84px 62px!important}
+@media (max-width:520px){.opp{grid-template-columns:1fr 1fr!important}}
+.clrow{display:grid;grid-template-columns:34px minmax(0,1fr) auto auto;gap:8px;align-items:center;padding:4px 0;border-bottom:1px solid var(--borde)}
+.clrow .crest{width:30px;height:30px;margin:0}.clrow .crest.gen{font-size:12px;width:30px;height:30px;line-height:30px}
+.cllist{max-height:340px;overflow:auto;display:flex;flex-direction:column}
+.tvr .op .crest{width:22px;height:22px}.tvr .op .crest.gen{font-size:9px;width:22px;height:22px;line-height:22px;vertical-align:-.3em}
+.mc-opp .crest{width:22px;height:22px}.mc-opp .crest.gen{font-size:9px;width:22px;height:22px;line-height:22px;vertical-align:-.3em}
+@media print{
+  @page{size:A4 landscape;margin:0}
+  body{background:#fff;padding:0}
+  .bar,.ov{display:none!important}
+  .pages{max-width:none;gap:0}
+  .page{width:297mm;box-shadow:none;break-after:page}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<script>document.body.classList.add("ro")</script>
+<div class="bar">
+  <h1>Match Calendar <span>26/27</span></h1><p class="hint" style="margin:0">Kazakhstan Academy · view only · updated hourly</p>
+  <div class="row">
+    <div class="field edit-only" style="flex:1 1 220px">
+      <label for="club">Club name (shown on every sheet)</label>
+      <input id="club" class="inp" placeholder="Type the club name" maxlength="60">
+    </div>
+    <div class="field edit-only">
+      <span class="lbl">Logo</span>
+      <div class="row"><label class="btn" for="logofile">Upload logo</label><input type="file" id="logofile" accept="image/*" hidden><button class="btn warn" id="logodel" hidden>Remove</button></div>
+    </div>
+    <div class="field">
+      <span class="lbl">Export</span>
+      <div class="row"><button id="pdf" class="btn pri">Download A4 PDF</button><button id="wa" class="btn wa">WhatsApp message</button><button id="csv" class="btn">Excel (.xlsx)</button><button id="ics" class="btn">Calendar (.ics)</button></div>
+    </div>
+  </div>
+  <div class="tabs" role="tablist" aria-label="View"><button id="tab-cal" role="tab" aria-selected="true">Calendar A4</button><button id="tab-tv" role="tab" aria-selected="false">Team results</button><button id="tab-mo" class="edit-only" role="tab" aria-selected="false">Matches organization</button></div>
+  <nav class="months" id="months"></nav>
+  <div class="note edit-only" id="exnote" hidden>
+    <span>There are 3 sample matches in October so you can see how it looks.</span>
+    <button class="btn warn" id="clearex">Delete samples</button>
+  </div>
+  <details class="teams edit-only" id="teams">
+    <summary>Teams and colours</summary>
+    <div class="tlist">
+      <p class="hint">Each age group has its own colour; its B team uses a lighter shade of it. The short code is what appears on each match.</p>
+      <div id="tlist" class="tlist" style="padding:0"></div>
+      <div class="row"><button class="btn" id="addgen">Add age group</button></div>
+    </div>
+  </details>
+  <details class="teams edit-only" id="clubsbox">
+    <summary>Opponent clubs <span class="status" id="clubcount"></span></summary>
+    <div class="tlist">
+      <div class="field"><label for="cl-cc">Country</label><select id="cl-cc" class="inp flgsel"></select></div>
+      <div id="cl-kz"><p class="hint">Kazakhstan clubs: one per line. They are sorted A–Z automatically and appear in the Opponent list.</p>
+      <textarea id="clubtxt" class="inp" rows="8" style="font:inherit;resize:vertical;width:100%"></textarea>
+      <div class="row"><button class="btn pri" id="clubsave">Save clubs</button><span class="status" id="clubmsg"></span></div></div>
+      <p class="hint">Logos: tap “Logo” next to a club and pick its crest image (PNG or JPG). Until then a coloured badge with its initials is shown.</p>
+      <div class="cllist" id="cl-list"></div><input type="file" id="cl-file" accept="image/*" hidden>
+    </div>
+  </details>
+  <details class="teams edit-only" id="compsbox">
+    <summary>Competitions and logos</summary>
+    <div class="tlist">
+      <p class="hint">Upload each competition's logo; it appears on every match of that competition. Until there's a logo, the short code is shown.</p>
+      <div id="clist" class="tlist" style="padding:0"></div>
+      <div class="row"><button class="btn" id="addcomp">Add competition</button></div>
+      <input type="file" id="complogo" accept="image/*" hidden>
+    </div>
+  </details>
+  <p class="hint edit-only">Tap a day to add a match, a training session or holidays. Tick “Date TBC” and the match spans Saturday and Sunday. <span class="status" id="status"></span></p>
+</div>
+
+<div class="accbox" id="accbox" hidden style="display:none!important"><p class="accnote" id="accnote"></p><button type="button" class="btn" id="editme">I’m an editor · enable editing</button></div>
+<section id="tv" hidden>
+  <div class="tv-head"><h2>Team <span>results</span></h2><div class="field"><label for="tv-team">Team</label><select id="tv-team" class="inp"></select></div></div>
+  <div class="tv-stats" id="tv-stats"></div>
+  <div class="tv-cols"><div><h3>Upcoming</h3><div class="tv-list" id="tv-next"></div></div><div><h3>Results</h3><div class="tv-list" id="tv-past"></div></div></div>
+</section>
+<section class="mo" id="mo" hidden>
+  <div>
+    <div class="mo-head"><h2 id="mo-title"></h2>
+      <div class="mo-ctrl"><div class="field"><label for="mo-d">Date</label><input type="date" id="mo-d" class="inp"></div>
+      <div class="field"><span class="lbl">Range</span><div class="seg" role="radiogroup" aria-label="Range"><label><input type="radio" name="mosp" id="mo-day" value="day">Day</label><label><input type="radio" name="mosp" id="mo-we" value="we" checked>Weekend</label><label><input type="radio" name="mosp" id="mo-wk" value="week">Week</label></div></div>
+      <button class="btn pri" id="mo-add">+ Add match</button></div></div>
+    <div id="mo-tours"></div>
+    <div class="mo-cards" id="mo-cards"></div>
+  </div>
+  <aside class="mo-side">
+    <div class="mo-panel"><div class="mc-head"><button type="button" class="btn" id="mc-prev" aria-label="Previous month">‹</button><b id="mc-lbl"></b><button type="button" class="btn" id="mc-next" aria-label="Next month">›</button></div><div class="mcal" id="mcal"></div><p class="hint">Tap a day to see its matches. A dot means there is something that day.</p></div>
+    <div class="mo-panel" id="ck"><span class="lbl" id="ck-t">Weekend checklist</span>
+      <div class="ckrows" id="ck-rows"></div>
+      <div class="msgbox" id="ck-msg"></div>
+      <textarea id="ck-fb" class="inp" rows="6" readonly hidden aria-label="Checklist to copy"></textarea>
+      <div class="row"><button class="btn pri" id="ck-copy">Copy checklist</button><a class="btn wa" id="ck-open" href="https://wa.me/" target="_blank" rel="noopener">Open in WhatsApp</a></div></div>
+    <div class="mo-panel"><span class="lbl">WhatsApp message</span><div class="msgbox" id="mo-msg"></div><p class="hint" id="mo-hint"></p>
+      <textarea id="mo-fb" class="inp" rows="6" readonly hidden aria-label="Message to copy"></textarea>
+      <div class="row"><button class="btn pri" id="mo-copy">Copy message</button><a class="btn wa" id="mo-open" href="https://wa.me/" target="_blank" rel="noopener">Open in WhatsApp</a></div></div>
+    <div class="mo-panel"><span class="lbl">Export all matches</span><div class="row"><button class="btn" id="mo-csv">Excel (.xlsx)</button><button class="btn" id="mo-ics">Calendar (.ics)</button></div><p class="hint">The .ics imports into Google Calendar, Outlook or iPhone.</p></div>
+  </aside>
+</section>
+<main class="pages" id="pages"></main>
+<div class="ov" id="ov" hidden><div class="dlg" id="dlg" role="dialog" aria-modal="true"></div></div>
+<div class="busy" id="busy" hidden>Building PDF…</div>
+
+<script>
+(function(){
+const MESES=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DOW=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const MESES_RU=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const DOWL=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const SEASON=[[2026,9],[2026,10],[2026,11],[2027,0],[2027,1],[2027,2],[2027,3],[2027,4],[2027,5]];
+const LSKEY='cal2627-draft';
+const FALLBACK_COLORS=['#1F3A93','#C62828','#2E7D32','#EF6C00','#6A1B9A','#00838F','#AD1457','#5D4037','#E0A100','#0277BD','#558B2F','#455A64'];
+
+let S={v:1,savedAt:0,club:'',gens:[],matches:[]};
+let art=null, remoteOK=true, saveTimer=null, owner=false;
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const key=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parse=k=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d)};
+const addD=(d,n)=>new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);
+const dowi=d=>(d.getDay()+6)%7;
+const saturdayOf=k=>key(addD(parse(k),5-dowi(parse(k))));
+const uid=()=>Math.random().toString(36).slice(2,9);
+
+function hexRgb(h){h=h.replace('#','');return [0,2,4].map(i=>parseInt(h.substr(i,2),16))}
+function rgbHex(a){return '#'+a.map(v=>pad(Math.round(v).toString(16))).join('')}
+function light(h){return rgbHex(hexRgb(h).map(v=>v+(255-v)*.6))}
+function dark(h){return rgbHex(hexRgb(h).map(v=>v*.72))}
+function ink(h){const [r,g,b]=hexRgb(h).map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});return (.2126*r+.7152*g+.0722*b)>.42?'#191C2B':'#FFFFFF'}
+const gen=id=>S.gens.find(g=>g.id===id);
+const comp=id=>id?(S.comps||[]).find(c=>c.id===id):null;
+const DEFAULT_COMPS=[{id:'fri',short:'FRI',name:'Friendly Match'},{id:'jl',short:'JL',name:'J League'},{id:'qjl',short:'QJL',name:'QJ League'},{id:'kff',short:'KFF',name:'KFF Championship'}];
+const HOME_VENUE='AQBULAQ';
+const REGIONS=['Abai Region','Akmola Region','Aktobe Region','Almaty','Almaty Region','Astana','Atyrau Region','East Kazakhstan Region','Jambyl Region','Jetisu Region','Karaganda Region','Kostanay Region','Kyzylorda Region','Mangystau Region','North Kazakhstan Region','Pavlodar Region','Shymkent','Turkistan Region','Ulytau Region','West Kazakhstan Region'].sort((a,b)=>a.localeCompare(b,'en'));
+const COUNTRIES='AL Albania|AD Andorra|AR Argentina|AM Armenia|AU Australia|AT Austria|AZ Azerbaijan|BY Belarus|BE Belgium|BA Bosnia and Herzegovina|BR Brazil|BG Bulgaria|CA Canada|CN China|HR Croatia|CY Cyprus|CZ Czechia|DK Denmark|EG Egypt|GB-ENG England|EE Estonia|FO Faroe Islands|FI Finland|FR France|GE Georgia|DE Germany|GI Gibraltar|GR Greece|HU Hungary|IS Iceland|IN India|IR Iran|IE Ireland|IL Israel|IT Italy|JP Japan|KZ Kazakhstan|XK Kosovo|KG Kyrgyzstan|LV Latvia|LI Liechtenstein|LT Lithuania|LU Luxembourg|MT Malta|MX Mexico|MD Moldova|MC Monaco|ME Montenegro|MA Morocco|NL Netherlands|MK North Macedonia|GB-NIR Northern Ireland|NO Norway|PL Poland|PT Portugal|QA Qatar|RO Romania|RU Russia|SM San Marino|SA Saudi Arabia|GB-SCT Scotland|RS Serbia|SK Slovakia|SI Slovenia|KR South Korea|ES Spain|SE Sweden|CH Switzerland|TJ Tajikistan|TH Thailand|TN Tunisia|TR Türkiye|TM Turkmenistan|UA Ukraine|AE United Arab Emirates|US United States|UZ Uzbekistan|GB-WLS Wales'.split('|').map(x=>{const i=x.indexOf(' ');return [x.slice(0,i),x.slice(i+1)]});
+const flagOf=cc=>{if(!cc)return '';if(cc==='GB-NIR')return '\u{1F1EC}\u{1F1E7}';if(cc.startsWith('GB-')){const t=cc.slice(3).toLowerCase();return '\u{1F3F4}'+[...('gb'+t)].map(ch=>String.fromCodePoint(0xE0000+ch.charCodeAt(0))).join('')+'\u{E007F}'}return [...cc].map(ch=>String.fromCodePoint(0x1F1E6+ch.charCodeAt(0)-65)).join('')};
+const ctryName=cc=>(COUNTRIES.find(c=>c[0]===cc)||[,''])[1];
+const flagHtml=cc=>cc?`<span class="flg" title="${esc(ctryName(cc))}">${flagOf(cc)}</span>`:'';
+const REGS={"AL":["Berat","Dibër","Durrës","Elbasan","Fier","Gjirokastër","Korçë","Kukës","Lezhë","Shkodër","Tirana","Vlorë"],"AD":["Andorra la Vella","Canillo","Encamp","Escaldes-Engordany","La Massana","Ordino","Sant Julià de Lòria"],"AR":["Buenos Aires (CABA)","Buenos Aires Province","Catamarca","Chaco","Chubut","Corrientes","Córdoba","Entre Ríos","Formosa","Jujuy","La Pampa","La Rioja","Mendoza","Misiones","Neuquén","Río Negro","Salta","San Juan","San Luis","Santa Cruz","Santa Fe","Santiago del Estero","Tierra del Fuego","Tucumán"],"AM":["Aragatsotn","Ararat","Armavir","Gegharkunik","Kotayk","Lori","Shirak","Syunik","Tavush","Vayots Dzor","Yerevan"],"AU":["Australian Capital Territory","New South Wales","Northern Territory","Queensland","South Australia","Tasmania","Victoria","Western Australia"],"AT":["Burgenland","Carinthia","Lower Austria","Salzburg (state)","Styria","Tyrol","Upper Austria","Vienna","Vorarlberg"],"AZ":["Absheron","Baku","Ganja-Dashkasan","Guba-Khachmaz","Lankaran-Astara","Nakhchivan","Shaki-Zagatala","Shirvan-Salyan","Sumgait"],"BY":["Brest Region","Gomel Region","Grodno Region","Minsk","Minsk Region","Mogilev Region","Vitebsk Region"],"BE":["Antwerp (province)","Brussels-Capital","East Flanders","Flemish Brabant","Hainaut","Limburg","Liège (province)","Luxembourg (province)","Namur (province)","Walloon Brabant","West Flanders"],"BA":["Brčko District","Federation of Bosnia and Herzegovina","Republika Srpska"],"BR":["Acre","Alagoas","Amapá","Amazonas","Bahia","Ceará","Distrito Federal","Espírito Santo","Goiás","Maranhão","Mato Grosso","Mato Grosso do Sul","Minas Gerais","Paraná","Paraíba","Pará","Pernambuco","Piauí","Rio de Janeiro (state)","Rio Grande do Norte","Rio Grande do Sul","Rondônia","Roraima","Santa Catarina","Sergipe","São Paulo (state)","Tocantins"],"BG":["Blagoevgrad","Burgas","Dobrich","Gabrovo","Haskovo","Kardzhali","Kyustendil","Lovech","Montana","Pazardzhik","Pernik","Pleven","Plovdiv","Razgrad","Ruse","Shumen","Silistra","Sliven","Smolyan","Sofia City","Sofia Province","Stara Zagora","Targovishte","Varna","Veliko Tarnovo","Vidin","Vratsa","Yambol"],"CA":["Alberta","British Columbia","Manitoba","New Brunswick","Newfoundland and Labrador","Northwest Territories","Nova Scotia","Nunavut","Ontario","Prince Edward Island","Quebec","Saskatchewan","Yukon"],"CN":["Anhui","Beijing","Chongqing","Fujian","Gansu","Guangdong","Guangxi","Guizhou","Hainan","Hebei","Heilongjiang","Henan","Hong Kong","Hubei","Hunan","Inner Mongolia","Jiangsu","Jiangxi","Jilin","Liaoning","Macau","Ningxia","Qinghai","Shaanxi","Shandong","Shanghai","Shanxi","Sichuan","Tianjin","Tibet","Xinjiang","Yunnan","Zhejiang"],"HR":["Bjelovar-Bilogora","Brod-Posavina","Dubrovnik-Neretva","Istria","Karlovac","Koprivnica-Križevci","Krapina-Zagorje","Lika-Senj","Međimurje","Osijek-Baranja","Požega-Slavonia","Primorje-Gorski Kotar","Sisak-Moslavina","Split-Dalmatia","Varaždin","Virovitica-Podravina","Vukovar-Srijem","Zadar","Zagreb (city)","Zagreb County","Šibenik-Knin"],"CY":["Famagusta","Kyrenia","Larnaca District","Limassol District","Nicosia District","Paphos District"],"CZ":["Central Bohemian","Hradec Králové","Karlovy Vary","Liberec","Moravian-Silesian","Olomouc","Pardubice","Plzeň","Prague","South Bohemian","South Moravian","Vysočina","Zlín","Ústí nad Labem"],"DK":["Capital Region","Central Denmark","North Denmark","Region Zealand","Southern Denmark"],"EG":["Alexandria","Aswan","Asyut","Beheira","Beni Suef","Cairo","Dakahlia","Damietta","Faiyum","Gharbia","Giza","Ismailia","Kafr El Sheikh","Luxor","Matrouh","Minya","Monufia","New Valley","North Sinai","Port Said","Qalyubia","Qena","Red Sea","Sharqia","Sohag","South Sinai","Suez"],"GB-ENG":["East Midlands","East of England","Greater London","North East England","North West England","South East England","South West England","West Midlands","Yorkshire and the Humber"],"EE":["Harju","Hiiu","Ida-Viru","Järva","Jõgeva","Lääne","Lääne-Viru","Pärnu","Põlva","Rapla","Saare","Tartu","Valga","Viljandi","Võru"],"FI":["Central Finland","Central Ostrobothnia","Kainuu","Kanta-Häme","Kymenlaakso","Lapland","North Karelia","North Ostrobothnia","North Savo","Ostrobothnia","Pirkanmaa","Päijät-Häme","Satakunta","South Karelia","South Ostrobothnia","South Savo","Southwest Finland","Uusimaa","Åland"],"FR":["Auvergne-Rhône-Alpes","Bourgogne-Franche-Comté","Brittany","Centre-Val de Loire","Corsica","Grand Est","Hauts-de-France","Normandy","Nouvelle-Aquitaine","Occitanie","Pays de la Loire","Provence-Alpes-Côte d'Azur","Île-de-France"],"GE":["Abkhazia","Adjara","Guria","Imereti","Kakheti","Kvemo Kartli","Mtskheta-Mtianeti","Racha-Lechkhumi and Kvemo Svaneti","Samegrelo-Zemo Svaneti","Samtskhe-Javakheti","Shida Kartli","Tbilisi"],"DE":["Baden-Württemberg","Bavaria","Berlin","Brandenburg","Bremen","Hamburg","Hesse","Lower Saxony","Mecklenburg-Vorpommern","North Rhine-Westphalia","Rhineland-Palatinate","Saarland","Saxony","Saxony-Anhalt","Schleswig-Holstein","Thuringia"],"GR":["Attica","Central Greece","Central Macedonia","Crete","Eastern Macedonia and Thrace","Epirus","Ionian Islands","Mount Athos","North Aegean","Peloponnese","South Aegean","Thessaly","Western Greece","Western Macedonia"],"HU":["Baranya","Borsod-Abaúj-Zemplén","Budapest","Bács-Kiskun","Békés","Csongrád-Csanád","Fejér","Győr-Moson-Sopron","Hajdú-Bihar","Heves","Jász-Nagykun-Szolnok","Komárom-Esztergom","Nógrád","Pest","Somogy","Szabolcs-Szatmár-Bereg","Tolna","Vas","Veszprém","Zala"],"IS":["Capital Region","Eastern Region","Northeastern Region","Northwestern Region","Southern Peninsula","Southern Region","Western Region","Westfjords"],"IN":["Andaman and Nicobar Islands","Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chandigarh","Chhattisgarh","Dadra and Nagar Haveli and Daman and Diu","Delhi","Goa","Gujarat","Haryana","Himachal Pradesh","Jammu and Kashmir","Jharkhand","Karnataka","Kerala","Ladakh","Lakshadweep","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Puducherry","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal"],"IR":["Alborz","Ardabil","Bushehr","Chaharmahal and Bakhtiari","East Azerbaijan","Fars","Gilan","Golestan","Hamadan","Hormozgan","Ilam","Isfahan","Kerman","Kermanshah","Khuzestan","Kohgiluyeh and Boyer-Ahmad","Kurdistan","Lorestan","Markazi","Mazandaran","North Khorasan","Qazvin","Qom","Razavi Khorasan","Semnan","Sistan and Baluchestan","South Khorasan","Tehran","West Azerbaijan","Yazd","Zanjan"],"IE":["Carlow","Cavan","Clare","Connacht","Cork","Donegal","Dublin","Galway","Kerry","Kildare","Kilkenny","Laois","Leinster","Leitrim","Limerick","Longford","Louth","Mayo","Meath","Monaghan","Munster","Offaly","Roscommon","Sligo","Tipperary","Ulster (Republic)","Waterford","Westmeath","Wexford","Wicklow"],"IL":["Central District","Haifa District","Jerusalem District","Northern District","Southern District","Tel Aviv District"],"IT":["Abruzzo","Aosta Valley","Apulia","Basilicata","Calabria","Campania","Emilia-Romagna","Friuli-Venezia Giulia","Lazio","Liguria","Lombardy","Marche","Molise","Piedmont","Sardinia","Sicily","Trentino-South Tyrol","Tuscany","Umbria","Veneto"],"JP":["Aichi","Akita","Aomori","Chiba","Ehime","Fukui","Fukuoka","Fukushima","Gifu","Gunma","Hiroshima","Hokkaido","Hyogo","Ibaraki","Ishikawa","Iwate","Kagawa","Kagoshima","Kanagawa","Kochi","Kumamoto","Kyoto","Mie","Miyagi","Miyazaki","Nagano","Nagasaki","Nara","Niigata","Oita","Okayama","Okinawa","Osaka","Saga","Saitama","Shiga","Shimane","Shizuoka","Tochigi","Tokushima","Tokyo","Tottori","Toyama","Wakayama","Yamagata","Yamaguchi","Yamanashi"],"KZ":["Abai Region","Akmola Region","Aktobe Region","Almaty","Almaty Region","Astana","Atyrau Region","East Kazakhstan Region","Jambyl Region","Jetisu Region","Karaganda Region","Kostanay Region","Kyzylorda Region","Mangystau Region","North Kazakhstan Region","Pavlodar Region","Shymkent","Turkistan Region","Ulytau Region","West Kazakhstan Region"],"KG":["Batken Region","Bishkek","Chüy Region","Issyk-Kul Region","Jalal-Abad Region","Naryn Region","Osh","Osh Region","Talas Region"],"LV":["Courland","Latgale","Riga Region","Selonia","Vidzeme","Zemgale"],"LT":["Alytus County","Kaunas County","Klaipėda County","Marijampolė County","Panevėžys County","Tauragė County","Telšiai County","Utena County","Vilnius County","Šiauliai County"],"LU":["Capellen","Clervaux","Diekirch","Echternach","Esch-sur-Alzette","Grevenmacher","Luxembourg","Mersch","Redange","Remich","Vianden","Wiltz"],"MT":["Gozo","Malta Majjistral","Malta Xlokk","Northern Harbour","Northern Region","South Eastern Region","Southern Harbour","Western Region"],"MX":["Aguascalientes","Baja California","Baja California Sur","Campeche","Chiapas","Chihuahua","Coahuila","Colima","Durango","Guanajuato","Guerrero","Hidalgo","Jalisco","Mexico City","Michoacán","Morelos","México (state)","Nayarit","Nuevo León","Oaxaca","Puebla","Querétaro","Quintana Roo","San Luis Potosí","Sinaloa","Sonora","Tabasco","Tamaulipas","Tlaxcala","Veracruz","Yucatán","Zacatecas"],"MD":["Anenii Noi","Bălți","Cahul","Chișinău","Gagauzia","Orhei","Soroca","Transnistria","Ungheni"],"MC":[],"ME":["Andrijevica","Bar","Berane","Bijelo Polje","Budva","Cetinje","Danilovgrad","Gusinje","Herceg Novi","Kolašin","Kotor","Mojkovac","Nikšić","Petnjica","Plav","Pljevlja","Plužine","Podgorica","Rožaje","Tivat","Tuzi","Ulcinj","Zeta","Šavnik","Žabljak"],"MA":["Béni Mellal-Khénifra","Casablanca-Settat","Dakhla-Oued Ed-Dahab","Drâa-Tafilalet","Fès-Meknès","Guelmim-Oued Noun","Laâyoune-Sakia El Hamra","Marrakesh-Safi","Oriental","Rabat-Salé-Kénitra","Souss-Massa","Tanger-Tétouan-Al Hoceïma"],"NL":["Drenthe","Flevoland","Friesland","Gelderland","Groningen","Limburg","North Brabant","North Holland","Overijssel","South Holland","Utrecht (province)","Zeeland"],"MK":["Eastern","Northeastern","Pelagonia","Polog","Skopje","Southeastern","Southwestern","Vardar"],"NO":["Agder","Akershus","Buskerud","Finnmark","Innlandet","Møre og Romsdal","Nordland","Oslo","Rogaland","Telemark","Troms","Trøndelag","Vestfold","Vestland","Østfold"],"PL":["Greater Poland","Kuyavian-Pomeranian","Lesser Poland","Lower Silesian","Lublin Voivodeship","Lubusz","Masovian","Opole Voivodeship","Podlaskie","Pomeranian","Silesian","Subcarpathian","Warmian-Masurian","West Pomeranian","Łódź Voivodeship","Świętokrzyskie"],"PT":["Aveiro","Azores","Beja","Braga","Bragança","Castelo Branco","Coimbra","Faro (Algarve)","Guarda","Leiria","Lisbon","Madeira","Portalegre","Porto","Santarém","Setúbal","Viana do Castelo","Vila Real","Viseu","Évora"],"QA":["Al Daayen","Al Khor","Al Rayyan","Al Shahaniya","Al Shamal","Al Wakrah","Doha","Umm Salal"],"RO":["Alba","Arad","Argeș","Bacău","Bihor","Bistrița-Năsăud","Botoșani","Brașov","Brăila","Bucharest","Buzău","Caraș-Severin","Cluj","Constanța","Covasna","Călărași","Dolj","Dâmbovița","Galați","Giurgiu","Gorj","Harghita","Hunedoara","Ialomița","Iași","Ilfov","Maramureș","Mehedinți","Mureș","Neamț","Olt","Prahova","Satu Mare","Sibiu","Suceava","Sălaj","Teleorman","Timiș","Tulcea","Vaslui","Vrancea","Vâlcea"],"RU":["Bashkortostan","Central Federal District","Chechnya","Dagestan","Far Eastern Federal District","Krasnodar Krai","Leningrad Oblast","Moscow Oblast","North Caucasian Federal District","Northwestern Federal District","Novosibirsk Oblast","Rostov Oblast","Samara Oblast","Siberian Federal District","Southern Federal District","Sverdlovsk Oblast","Tatarstan","Tyumen Oblast","Ural Federal District","Volga Federal District"],"SA":["Al Bahah","Al Jawf","Al-Qassim","Asir","Eastern Province","Ha'il","Jazan","Madinah","Makkah","Najran","Northern Borders","Riyadh Province","Tabuk"],"GB-SCT":["Aberdeen City","Aberdeenshire","Angus","Argyll and Bute","Dumfries and Galloway","Dundee","East Lothian","Edinburgh","Falkirk","Fife","Glasgow","Highland","Inverclyde","Lanarkshire","Moray","Perth and Kinross","Renfrewshire","Scottish Borders","Stirling","West Lothian"],"RS":["Belgrade","Kosovo and Metohija","Southern and Eastern Serbia","Vojvodina","Šumadija and Western Serbia"],"SK":["Banská Bystrica Region","Bratislava Region","Košice Region","Nitra Region","Prešov Region","Trenčín Region","Trnava Region","Žilina Region"],"SI":["Carinthia","Central Sava","Central Slovenia","Coastal–Karst","Drava","Gorizia","Littoral–Inner Carniola","Lower Sava","Mura","Savinja","Southeast Slovenia","Upper Carniola"],"KR":["Busan","Chungcheongbuk-do","Chungcheongnam-do","Daegu","Daejeon","Gangwon","Gwangju","Gyeonggi-do","Gyeongsangbuk-do","Gyeongsangnam-do","Incheon","Jeju","Jeollabuk-do","Jeollanam-do","Sejong","Seoul","Ulsan"],"ES":["Andalusia","Aragon","Asturias","Balearic Islands","Basque Country","Canary Islands","Cantabria","Castile and León","Castile-La Mancha","Catalonia","Ceuta","Extremadura","Galicia","La Rioja","Madrid","Melilla","Murcia","Navarre","Valencian Community"],"SE":["Blekinge","Dalarna","Gotland","Gävleborg","Halland","Jämtland","Jönköping","Kalmar","Kronoberg","Norrbotten","Skåne","Stockholm County","Södermanland","Uppsala","Värmland","Västerbotten","Västernorrland","Västmanland","Västra Götaland","Örebro","Östergötland"],"CH":["Aargau","Appenzell Ausserrhoden","Appenzell Innerrhoden","Basel-Landschaft","Basel-Stadt","Bern","Fribourg","Geneva","Glarus","Graubünden","Jura","Lucerne","Neuchâtel","Nidwalden","Obwalden","Schaffhausen","Schwyz","Solothurn","St. Gallen","Thurgau","Ticino","Uri","Valais","Vaud","Zug","Zurich"],"TJ":["Districts of Republican Subordination","Dushanbe","Gorno-Badakhshan","Khatlon","Sughd"],"TH":["Bangkok","Buriram","Central Thailand","Chiang Mai Province","Chonburi","Eastern Thailand","Khon Kaen","Krabi","Nonthaburi","Northeastern Thailand (Isan)","Northern Thailand","Pathum Thani","Phuket","Southern Thailand","Surat Thani","Western Thailand"],"TN":["Ariana","Ben Arous","Bizerte","Béja","Gabès","Gafsa","Jendouba","Kairouan","Kasserine","Kebili","Kef","Mahdia","Manouba","Medenine","Monastir","Nabeul","Sfax","Sidi Bouzid","Siliana","Sousse","Tataouine","Tozeur","Tunis","Zaghouan"],"TR":["Adana","Adıyaman","Afyonkarahisar","Aksaray","Amasya","Ankara","Antalya","Ardahan","Artvin","Aydın","Ağrı","Balıkesir","Bartın","Batman","Bayburt","Bilecik","Bingöl","Bitlis","Bolu","Burdur","Bursa","Denizli","Diyarbakır","Düzce","Edirne","Elazığ","Erzincan","Erzurum","Eskişehir","Gaziantep","Giresun","Gümüşhane","Hakkari","Hatay","Isparta","Istanbul","Izmir","Iğdır","Kahramanmaraş","Karabük","Karaman","Kars","Kastamonu","Kayseri","Kilis","Kocaeli","Konya","Kütahya","Kırklareli","Kırıkkale","Kırşehir","Malatya","Manisa","Mardin","Mersin","Muğla","Muş","Nevşehir","Niğde","Ordu","Osmaniye","Rize","Sakarya","Samsun","Siirt","Sinop","Sivas","Tekirdağ","Tokat","Trabzon","Tunceli","Uşak","Van","Yalova","Yozgat","Zonguldak","Çanakkale","Çankırı","Çorum","Şanlıurfa","Şırnak"],"TM":["Ahal Region","Arkadag","Ashgabat","Balkan Region","Daşoguz Region","Lebap Region","Mary Region"],"UA":["Cherkasy Oblast","Chernihiv Oblast","Chernivtsi Oblast","Crimea","Dnipropetrovsk Oblast","Donetsk Oblast","Ivano-Frankivsk Oblast","Kharkiv Oblast","Kherson Oblast","Khmelnytskyi Oblast","Kirovohrad Oblast","Kyiv","Kyiv Oblast","Luhansk Oblast","Lviv Oblast","Mykolaiv Oblast","Odesa Oblast","Poltava Oblast","Rivne Oblast","Sevastopol","Sumy Oblast","Ternopil Oblast","Vinnytsia Oblast","Volyn Oblast","Zakarpattia Oblast","Zaporizhzhia Oblast","Zhytomyr Oblast"],"AE":["Abu Dhabi","Ajman","Dubai","Fujairah","Ras Al Khaimah","Sharjah","Umm Al Quwain"],"US":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","District of Columbia","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Puerto Rico","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"UZ":["Andijan Region","Bukhara Region","Fergana Region","Jizzakh Region","Karakalpakstan","Kashkadarya Region","Khorezm Region","Namangan Region","Navoiy Region","Samarkand Region","Sirdaryo Region","Surxondaryo Region","Tashkent","Tashkent Region"],"GB-WLS":["Anglesey","Blaenau Gwent","Bridgend","Caerphilly","Cardiff","Carmarthenshire","Ceredigion","Conwy","Denbighshire","Flintshire","Gwynedd","Merthyr Tydfil","Monmouthshire","Neath Port Talbot","Newport","Pembrokeshire","Powys","Rhondda Cynon Taf","Swansea","Torfaen","Vale of Glamorgan","Wrexham"]};
+const CITYS={"AL":["Durrës","Sarandë","Shkodër","Tirana","Vlorë"],"AD":["Andorra la Vella","Encamp","Escaldes-Engordany","La Massana"],"AR":["La Plata","Mar del Plata","Rosario"],"AM":["Dilijan","Gyumri","Vanadzor","Yerevan"],"AU":["Adelaide","Brisbane","Canberra","Gold Coast","Melbourne","Perth","Sydney"],"AT":["Graz","Innsbruck","Klagenfurt","Linz","Salzburg","Vienna"],"AZ":["Baku","Gabala","Ganja","Lankaran","Sumgait"],"BY":["Barysaw","Brest","Gomel","Grodno","Minsk","Mogilev","Vitebsk"],"BE":["Antwerp","Bruges","Charleroi","Ghent","Leuven","Liège","Namur"],"BA":["Banja Luka","Mostar","Sarajevo","Tuzla","Zenica"],"BR":["Belo Horizonte","Brasília","Curitiba","Fortaleza","Porto Alegre","Recife","Rio de Janeiro","Salvador","São Paulo"],"BG":["Albena","Golden Sands","Sofia","Sunny Beach"],"CA":["Calgary","Edmonton","Montreal","Ottawa","Quebec City","Toronto","Vancouver","Winnipeg"],"CN":["Beijing","Chengdu","Dalian","Guangzhou","Hangzhou","Nanjing","Qingdao","Shanghai","Shenzhen","Urumqi","Wuhan","Xi'an"],"HR":["Dubrovnik","Novigrad","Osijek","Poreč","Pula","Rijeka","Split","Umag","Zadar"],"CY":["Ayia Napa","Larnaca","Limassol","Nicosia","Paphos","Protaras"],"CZ":["Brno","Liberec","Olomouc","Ostrava","Plzeň","Prague"],"DK":["Aalborg","Aarhus","Copenhagen","Esbjerg","Frederikshavn","Hjørring","Odense"],"EG":["Alexandria","Cairo","El Gouna","Hurghada","Sharm El Sheikh"],"GB-ENG":["Birmingham","Blackpool","Brighton","Bristol","Leeds","Leicester","Liverpool","London","Manchester","Newcastle","Nottingham","Sheffield","Southampton"],"EE":["Narva","Pärnu","Tallinn","Tartu"],"FI":["Espoo","Helsinki","Jyväskylä","Oulu","Tampere","Turku","Vantaa"],"FR":["Bordeaux","Cannes","Lille","Lyon","Marseille","Montpellier","Nantes","Nice","Paris","Rennes","Strasbourg","Toulouse"],"GE":["Batumi","Gori","Kutaisi","Rustavi","Tbilisi","Zugdidi"],"DE":["Berlin","Bremen","Cologne","Dortmund","Düsseldorf","Frankfurt","Gelsenkirchen","Hamburg","Hanover","Leipzig","Leverkusen","Munich","Mönchengladbach","Stuttgart"],"GR":["Athens","Chania","Heraklion","Larissa","Patras","Rhodes","Thessaloniki","Volos"],"HU":["Budapest","Debrecen","Felcsút","Győr","Pécs","Siófok","Szeged"],"IS":["Akureyri","Kópavogur","Reykjavík"],"IN":["Bengaluru","Chennai","Hyderabad","Kolkata","Mumbai","New Delhi","Pune"],"IR":["Isfahan","Kish Island","Mashhad","Shiraz","Tabriz","Tehran"],"IE":["Cork","Dublin","Galway","Limerick"],"IL":["Be'er Sheva","Eilat","Haifa","Jerusalem","Netanya","Tel Aviv"],"IT":["Bergamo","Bologna","Florence","Genoa","Lake Garda","Lignano","Milan","Naples","Riccione","Rimini","Rome","Turin","Venice","Verona"],"JP":["Kobe","Kyoto","Nagoya","Osaka","Sapporo","Sendai","Tokyo","Yokohama"],"KZ":["Aktau","Aktobe","Almaty","Astana","Atyrau","Karaganda","Kaskelen","Kokshetau","Konaev","Kostanay","Kyzylorda","Oral","Oskemen","Pavlodar","Petropavl","Semey","Shymkent","Taldykorgan","Talgar","Taraz","Turkistan","Zhezkazgan"],"KG":["Bishkek","Cholpon-Ata","Karakol","Osh","Tokmok"],"LV":["Daugavpils","Jelgava","Jūrmala","Liepāja","Riga","Ventspils"],"LT":["Kaunas","Klaipėda","Panevėžys","Vilnius","Šiauliai"],"LU":["Luxembourg City"],"MT":["Birkirkara","Mosta","Sliema","St. Julian's","Ta' Qali","Valletta"],"MX":["Cancún","Guadalajara","Monterrey","Puebla","Tijuana"],"MD":["Bălți","Chișinău","Comrat","Tiraspol"],"MC":["Monaco"],"ME":["Bar","Budva","Herceg Novi","Kotor","Nikšić","Podgorica","Tivat","Ulcinj"],"MA":["Agadir","Casablanca","Fès","Marrakesh","Rabat","Saïdia","Tangier"],"NL":["Alkmaar","Amsterdam","Arnhem","Eindhoven","Enschede","Rotterdam","The Hague","Utrecht","Zeist"],"MK":["Bitola","Kumanovo","Ohrid","Skopje","Struga"],"NO":["Bergen","Bodø","Kristiansand","Oslo","Stavanger","Tromsø","Trondheim"],"PL":["Gdańsk","Katowice","Kraków","Lublin","Poznań","Szczecin","Warsaw","Wrocław","Łódź"],"PT":["Albufeira","Braga","Faro","Funchal","Guimarães","Lisbon","Portimão","Porto","Vilamoura"],"QA":["Al Rayyan","Al Wakrah","Doha","Lusail"],"RO":["Brașov","Cluj-Napoca","Constanța","Iași","Mamaia","Timișoara"],"RU":["Chelyabinsk","Grozny","Kazan","Krasnodar","Moscow","Nizhny Novgorod","Novosibirsk","Omsk","Rostov-on-Don","Saint Petersburg","Samara","Sochi","Ufa","Volgograd","Yekaterinburg"],"SA":["Dammam","Jeddah","Khobar","Mecca","Medina","Riyadh"],"GB-SCT":["Aberdeen","Dundee","Edinburgh","Glasgow","Inverness","Kilmarnock","Livingston","Motherwell"],"RS":["Belgrade","Kragujevac","Niš","Novi Sad","Subotica"],"SK":["Bratislava","Košice","Nitra","Trnava","Žilina"],"SI":["Celje","Koper","Kranj","Ljubljana","Maribor","Portorož"],"KR":["Busan","Gyeongju","Incheon","Jeonju","Pohang","Seoul","Suwon"],"ES":["A Coruña","Alcobendas","Alicante","Almería","Badajoz","Barcelona","Benidorm","Bilbao","Burgos","Castellón","Cádiz","Córdoba","Elche","Getafe","Gijón","Girona","Granada","Huelva","Jerez","Las Palmas","Las Rozas","León","Lleida","Lloret de Mar","Logroño","Madrid","Majadahonda","Marbella","Murcia","Málaga","Oviedo","Palma","Pamplona","Salamanca","Salou","San Sebastián","Santander","Seville","Tarragona","Tenerife","Valencia","Valladolid","Vigo","Villarreal","Vitoria-Gasteiz","Zaragoza"],"SE":["Gothenburg","Helsingborg","Malmö","Norrköping","Stockholm","Uppsala"],"CH":["Basel","Bern","Geneva","Lausanne","Lugano","Zurich"],"TJ":["Bokhtar","Dushanbe","Khujand","Kulob"],"TH":["Bangkok","Chiang Mai","Hua Hin","Koh Samui","Pattaya","Phuket"],"TN":["Djerba","Hammamet","Monastir","Sfax","Sousse","Tunis"],"TR":["Alanya","Ankara","Antalya","Belek","Bodrum","Istanbul","Izmir","Kemer","Marmaris","Side"],"TM":["Awaza","Balkanabat","Daşoguz","Mary","Türkmenabat"],"UA":["Dnipro","Kharkiv","Kyiv","Lviv","Odesa","Uzhhorod"],"AE":["Abu Dhabi","Al Ain","Dubai","Dubai Sports City","Sharjah"],"US":["Atlanta","Boston","Chicago","Dallas","Denver","Houston","Kansas City","Las Vegas","Los Angeles","Miami","New York City","Orlando","Philadelphia","Phoenix","San Diego","San Francisco","Seattle","Tampa","Washington, D.C."],"UZ":["Andijan","Bukhara","Fergana","Namangan","Nukus","Qarshi","Samarkand","Tashkent","Termez"],"GB-WLS":["Cardiff","Newport","Swansea","Wrexham"]};
+const tPlace=(m,ctry)=>{const a=[m.city,m.treg].filter(Boolean);if(a.length===2&&a[0].toLowerCase()===a[1].toLowerCase())a.pop();if(ctry&&m.cc)a.push(ctryName(m.cc));return a.join(', ')};
+const isSpan=m=>m.type==='holiday'||m.type==='tour';
+const HOME_GROUNDS=['Aqbulaq','KFF Pele Stadium'];
+const groundOf=m=>HOME_GROUNDS.includes(m.ground)?m.ground:'Aqbulaq';
+const venueOf=m=>m.home?(groundOf(m)==='Aqbulaq'?HOME_VENUE:groundOf(m)):(m.region||'');
+const RX=/^(.*?)\s+(20\d\d)(?:\s+([A-Z]))?$/;
+function splitRival(r){const x=(r||'').trim().match(RX);return x?{club:x[1].trim(),year:x[2],letter:x[3]||''}:{club:(r||'').trim(),year:'',letter:''}}
+let CRESTS={};
+const CLUBDB={"ES":["Alavés","Albacete","Almería","Athletic Club","Atlético Madrid","Burgos","Cartagena","Castellón","Celta Vigo","Ceuta","CF Damm","Cultural Leonesa","Cádiz","Córdoba","Deportivo La Coruña","Eibar","Elche","Eldense","Espanyol","FC Barcelona","Fundación Marcet","Getafe","Girona","Granada","Huesca","Las Palmas","Leganés","Levante","Mallorca","Mirandés","Málaga","Osasuna","Racing Ferrol","Racing Santander","Rayo Majadahonda","Rayo Vallecano","Real Betis","Real Madrid","Real Oviedo","Real Sociedad","Real Valladolid","Real Zaragoza","Sevilla","Sporting Gijón","Tenerife","Valencia","Villarreal"],"GB-ENG":["Arsenal","Aston Villa","Bournemouth","Brentford","Brighton & Hove Albion","Burnley","Chelsea","Coventry City","Crystal Palace","Derby County","Everton","Fulham","Hull City","Ipswich Town","Leeds United","Leicester City","Liverpool","Manchester City","Manchester United","Middlesbrough","Newcastle United","Norwich City","Nottingham Forest","Queens Park Rangers","Sheffield United","Southampton","Stoke City","Sunderland","Tottenham Hotspur","Watford","West Bromwich Albion","West Ham United","Wolverhampton Wanderers"],"DE":["1. FC Heidenheim","1. FC Köln","Bayer Leverkusen","Bayern Munich","Borussia Dortmund","Borussia Mönchengladbach","Eintracht Frankfurt","FC Augsburg","FC St. Pauli","Fortuna Düsseldorf","Hamburger SV","Hannover 96","Hertha BSC","Mainz 05","RB Leipzig","SC Freiburg","SC Paderborn 07","Schalke 04","SV 07 Elversberg","TSG Hoffenheim","Union Berlin","VfB Stuttgart","VfL Wolfsburg","Werder Bremen"],"IT":["AC Milan","Atalanta","Bologna","Cagliari","Como","Cremonese","Empoli","Fiorentina","Frosinone Calcio","Genoa","Hellas Verona","Inter Milan","Juventus","Lazio","Lecce","Monza","Napoli","Parma","Pisa","Roma","Sampdoria","Sassuolo","Torino","Udinese","Venezia"],"FR":["Angers","Auxerre","ESTAC Troyes","Le Havre","Le Mans FC","Lorient","LOSC Lille","Metz","Montpellier","Nantes","OGC Nice","Olympique de Marseille","Olympique Lyonnais","Paris FC","Paris Saint-Germain","RC Lens","RC Strasbourg","Reims","Saint-Étienne","Stade Brestois","Stade Rennais","Toulouse"],"MC":["AS Monaco"],"PT":["Académico Viseu FC","Alverca","Arouca","AVS","Benfica","Boavista","Casa Pia","CS Marítimo","Estoril","Estrela da Amadora","Famalicão","FC Porto","Gil Vicente","Moreirense","Nacional","Rio Ave","Santa Clara","Sporting Braga","Sporting CP","Tondela","Vitória de Guimarães"],"NL":["ADO Den Haag","Ajax","AZ Alkmaar","Excelsior","FC Groningen","FC Twente","FC Utrecht","FC Volendam","Feyenoord","Fortuna Sittard","Go Ahead Eagles","Heerenveen","Heracles Almelo","NAC Breda","NEC Nijmegen","PEC Zwolle","PSV Eindhoven","SC Cambuur Leeuwarden","Sparta Rotterdam","Telstar","Vitesse","Willem II"],"BE":["Anderlecht","Cercle Brugge","Charleroi","Club Brugge","Dender","KAA Gent","KRC Genk","KV Kortrijk","KV Mechelen","La Louvière","Lommel SK","OH Leuven","Royal Antwerp","Sint-Truiden","SK Beveren","Standard Liège","Union Saint-Gilloise","Westerlo","Zulte Waregem"],"GB-SCT":["Aberdeen","Celtic","Dundee","Dundee United","Falkirk","Heart of Midlothian","Hibernian","Kilmarnock","Livingston","Motherwell","Rangers","Ross County","St Johnstone","St Mirren"],"GB-WLS":["Bala Town","Barry Town","Briton Ferry","Caernarfon Town","Cardiff City","Cardiff Metropolitan","Colwyn Bay","Connah's Quay Nomads","Flint Town United","Haverfordwest County","Llanelli Town","Newport County","Penybont","Swansea City","The New Saints","Wrexham"],"GB-NIR":["Ballymena United","Bangor","Carrick Rangers","Cliftonville","Coleraine","Crusaders","Dungannon Swifts","Glenavon","Glentoran","Larne","Linfield","Portadown"],"IE":["Bohemians","Cork City","Derry City","Drogheda United","Dundalk","Galway United","Shamrock Rovers","Shelbourne","Sligo Rovers","St Patrick's Athletic","Waterford"],"TR":["Alanyaspor","Altınordu","Amed SK","Antalyaspor","Beşiktaş","Corum FK","Erzurumspor FK","Eyüpspor","Fatih Karagümrük","Fenerbahçe","Galatasaray","Gaziantep FK","Gençlerbirliği","Göztepe","İstanbul Başakşehir","Kasımpaşa","Kayserispor","Kocaelispor","Konyaspor","Samsunspor","Sivasspor","Trabzonspor","Çaykur Rizespor"],"RU":["Akhmat Grozny","Akron Togliatti","Baltika Kaliningrad","Chertanovo Moscow","CSKA Moscow","Dynamo Makhachkala","Dynamo Moscow","Fakel Voronezh","FC Krasnodar","FC Rostov","Konoplev Academy","Krylia Sovetov","Lokomotiv Moscow","Orenburg","Pari Nizhny Novgorod","PFC Sochi","Rodina Moscow","Rubin Kazan","Spartak Moscow","Strogino Moscow","Torpedo Moscow","Ural Yekaterinburg","Zenit Saint Petersburg"],"UA":["Bukovyna Chernivtsi","Chornomorets Odesa","Dynamo Kyiv","Epitsentr","FC Kharkiv","Karpaty Lviv","Kolos Kovalivka","Kryvbas","Kudrivka","Livyi Bereg Kyiv","LNZ Cherkasy","Metalist 1925","Obolon Kyiv","Oleksandriya","Polissya Zhytomyr","Poltava","Rukh Lviv","Shakhtar Donetsk","Veres Rivne","Zorya Luhansk"],"BY":["Arsenal Dzerzhinsk","BATE Borisov","Dinamo Brest","Dinamo Minsk","Dnepr Mogilev","FC Gomel","FC Minsk","FC Vitebsk","Isloch","Naftan Novopolotsk","Neman Grodno","Shakhtyor Soligorsk","Slavia Mozyr","Slutsk","Torpedo-BelAZ Zhodino"],"PL":["Arka Gdynia","Cracovia","GKS Katowice","Górnik Zabrze","Jagiellonia Białystok","Korona Kielce","Lech Poznań","Lechia Gdańsk","Legia Warsaw","Motor Lublin","Piast Gliwice","Pogoń Szczecin","Radomiak Radom","Raków Częstochowa","Slask Wroclaw","Termalica Nieciecza","Widzew Łódź","Wieczysta Krakow","Wisła Kraków","Wisła Płock","Zagłębie Lubin"],"CZ":["Baník Ostrava","Bohemians 1905","Dukla Prague","FC Zbrojovka Brno","Hradec Králové","Jablonec","Karviná","Mladá Boleslav","Pardubice","Sigma Olomouc","SK Artis Brno","Slavia Prague","Slovan Liberec","Slovácko","Sparta Prague","Teplice","Viktoria Plzeň","Zlín"],"AT":["Austria Wien","Blau-Weiß Linz","Grazer AK","LASK","Rapid Wien","Red Bull Salzburg","Rheindorf Altach","SC Austria Lustenau","Sturm Graz","SV Ried","TSV Hartberg","Wolfsberger AC","WSG Tirol"],"CH":["FC Basel","FC Thun","FC Zürich","Grasshoppers","Lausanne-Sport","Lugano","Luzern","Servette","Sion","St. Gallen","Winterthur","Young Boys"],"DK":["AC Horsens","AGF Aarhus","Brøndby","FC Copenhagen","FC Fredericia","FC Midtjylland","FC Nordsjælland","Lyngby Boldklub","OB Odense","Randers","Silkeborg","Sønderjyske","Vejle","Viborg"],"SE":["AIK","BK Häcken","Degerfors","Djurgården","GAIS","Halmstads BK","Hammarby","IF Brommapojkarna","IF Elfsborg","IFK Göteborg","IFK Norrköping","IFK Värnamo","IK Sirius","Kalmar FF","Malmö FF","Mjällby AIF","Västerås SK","Örgryte IS","Östers IF"],"NO":["Aalesunds FK","Bodø/Glimt","Brann","Bryne","Fredrikstad","HamKam","Haugesund","IK Start","KFUM Oslo","Kristiansund","Lillestrøm SK","Molde","Rosenborg","Sandefjord","Sarpsborg 08","Strømsgodset","Tromsø","Viking","Vålerenga"],"FI":["AC Oulu","FC Lahti","Gnistan","Haka","HJK Helsinki","IFK Mariehamn","Ilves","Inter Turku","KTP","KuPS","SJK","VPS"],"IS":["Afturelding","Breiðablik","FH","Fram","KA Akureyri","KR Reykjavík","Stjarnan","Valur","Vestri","Víkingur Reykjavík","ÍA","ÍBV"],"FO":["07 Vestur","AB Argir","B36 Tórshavn","B68 Toftir","EB/Streymur","HB Tórshavn","KÍ Klaksvík","NSÍ Runavík","Skála","Víkingur Gøta"],"GR":["AEK Athens","AEL Larissa","Aris Thessaloniki","Asteras Tripolis","Atromitos","Iraklis Thessaloniki","Kalamata FC","Kifisia","Levadiakos","OFI Crete","Olympiacos","Panathinaikos","Panetolikos","Panserraikos","PAOK","Volos"],"HR":["Dinamo Zagreb","Hajduk Split","HNK Gorica","HNK Rijeka","Istra 1961","Lokomotiva Zagreb","NK Osijek","NK Rudes","Slaven Belupo","Varaždin","Vukovar 1991"],"RS":["FK Macva Sabac","FK Zemun","IMT Belgrade","Javor Ivanjica","Mladost Lučani","Napredak Kruševac","Novi Pazar","OFK Beograd","Partizan","Radnik Surdulica","Radnički 1923","Radnički Niš","Red Star Belgrade","Spartak Subotica","TSC Bačka Topola","Vojvodina","Čukarički","Železničar Pančevo"],"SI":["Aluminij","Bravo","Celje","Domžale","Koper","Maribor","Mura","Olimpija Ljubljana","Primorje","Radomlje"],"SK":["AS Trenčín","DAC Dunajská Streda","FC Košice","KFC Komárno","MŠK Žilina","Ružomberok","Skalica","Slovan Bratislava","Spartak Trnava","Tatran Prešov","Zemplín Michalovce","Železiarne Podbrezová"],"HU":["Debrecen","Diósgyőr","ETO Győr","Ferencváros","Honvéd","Kazincbarcika","Kisvárda","MTK Budapest","Nyíregyháza","Paks","Puskás Akadémia","ZTE","Újpest"],"RO":["Argeș Pitești","CFR Cluj","Corvinul Hunedoara","Csíkszereda","Dinamo București","Farul Constanța","FC Botoșani","FC Voluntari","FCSB","Gheorghe Hagi Academy","Hermannstadt","Metaloglobus","Oțelul Galați","Petrolul Ploiești","Rapid București","Sepsi OSK Sf. Gheorghe","Unirea Slobozia","Universitatea Cluj","Universitatea Craiova","UTA Arad"],"BG":["Arda Kardzhali","Beroe","Botev Plovdiv","Botev Vratsa","Cherno More","CSKA 1948","CSKA Sofia","Dobrudzha","Dunav Ruse","Levski Sofia","Lokomotiv Plovdiv","Lokomotiv Sofia","Ludogorets","Montana","Septemvri Sofia","Slavia Sofia","Spartak Varna"],"CY":["AEK Larnaca","AEL Limassol","Akritas Chlorakas","Anorthosis","APOEL","Apollon Limassol","Aris Limassol","Enosis Neon Paralimni","Ethnikos Achna","Krasava","Olympiakos Nicosia","Omonia Aradippou","Omonia Nicosia","Pafos FC"],"IL":["Beitar Jerusalem","Bnei Sakhnin","FC Ashdod","Hapoel Be'er Sheva","Hapoel Haifa","Hapoel Jerusalem","Hapoel Petah Tikva","Hapoel Ramat Gan","Hapoel Tel Aviv","Ironi Kiryat Shmona","Ironi Tiberias","Maccabi Bnei Reineh","Maccabi Haifa","Maccabi Netanya","Maccabi Petah Tikva","Maccabi Tel Aviv"],"GE":["Dila Gori","Dinamo Batumi","Dinamo Tbilisi","Gagra","Iberia 1999","Kolkheti Poti","Samgurali","Spaeri","Telavi","Torpedo Kutaisi"],"AM":["Alashkert","Ararat Yerevan","Ararat-Armenia","BKMA","Gandzasar","Noah","Pyunik","Shirak","Urartu","Van"],"AZ":["Araz-Naxçıvan","Gabala","İmişli","Kapaz","Karvan","Neftçi","Qarabağ","Sabah","Shamakhi","Sumgayit","Turan Tovuz","Zirə"],"MD":["Dacia Buiucani","FC Bălți","Florești","Milsami Orhei","Petrocub","Sheriff Tiraspol","Spartanii Sportul","Zimbru Chișinău"],"AL":["Bylis","Dinamo City","Egnatia","Elbasani","Flamurtari","KF Tirana","Partizani","Teuta","Vllaznia","Vora"],"MK":["Bashkimi","Makedonija GP","Pelister","Rabotnički","Shkupi","Shkëndija","Sileks","Struga","Tikvesh","Vardar"],"ME":["Arsenal Tivat","Bokelj","Budućnost Podgorica","Dečić","Jedinstvo","Jezero","Mladost DG","Mornar","Petrovac","Sutjeska"],"BA":["Borac Banja Luka","FK Sarajevo","GOŠK Gabela","Igman Konjic","Posušje","Radnik Bijeljina","Rudar Prijedor","Sloga Doboj","Velež Mostar","Zrinjski Mostar","Široki Brijeg","Željezničar"],"XK":["Ballkani","Drenica","Drita","Dukagjini","Ferizaj","Gjilani","Llapi","Malisheva","Prishtina","Prishtina e Re"],"LV":["Auda","BFC Daugavpils","FK Liepāja","Grobiņa","Jelgava","Metta","RFS","Riga FC","Tukums","Valmiera"],"LT":["Banga","Dainava","Džiugas","FA Šiauliai","FK Panevėžys","Hegelmann","Kauno Žalgiris","Riteriai","Sūduva","Žalgiris"],"EE":["Flora Tallinn","Harju JK Laagri","Kuressaare","Levadia Tallinn","Narva Trans","Nõmme Kalju","Nõmme United","Paide","Tammeka","Vaprus"],"GI":["Bruno's Magpies","College 1975","Europa FC","Europa Point","Glacis United","Lincoln Red Imps","Lions Gibraltar","Manchester 62","Mons Calpe","St Joseph's"],"LI":["FC Balzers","FC Ruggell","FC Schaan","FC Triesen","FC Triesenberg","FC Vaduz","USV Eschen/Mauren"],"LU":["Differdange 03","F91 Dudelange","Fola Esch","Hostert","Jeunesse Esch","Käerjéng","Mondorf","Progrès Niederkorn","Racing Union","Swift Hesperange","UNA Strassen","Victoria Rosport"],"MT":["Balzan","Birkirkara","Floriana","Gżira United","Hibernians","Marsaxlokk","Mosta","Naxxar Lions","Sliema Wanderers","Valletta","Ħamrun Spartans","Żabbar St. Patrick"],"SM":["Cailungo","Cosmos","Domagnano","Faetano","Fiorentino","Folgore","Juvenes/Dogana","La Fiorita","Libertas","Murata","Pennarossa","San Giovanni","Tre Fiori","Tre Penne","Virtus"],"AD":["Atlètic Club d'Escaldes","Carroi","Esperança d'Andorra","FC Andorra","FC Ordino","FC Santa Coloma","Inter Club d'Escaldes","Pas de la Casa","UE Engordany","UE Santa Coloma"],"CN":["Beijing Guoan","Changchun Yatai","Chengdu Rongcheng","Dalian Yingbo","Henan FC","Meizhou Hakka","Qingdao Hainiu","Qingdao West Coast","Shandong Taishan","Shanghai Port","Shanghai Shenhua","Shenzhen Peng City","Tianjin Jinmen Tiger","Wuhan Three Towns","Yunnan Yukun","Zhejiang FC"],"JP":["AC Nagano Parceiro","Albirex Niigata","Avispa Fukuoka","Azul Claro Numazu","Blaublitz Akita","Cerezo Osaka","Ehime FC","Fagiano Okayama","FC Gifu","FC Imabari","FC Machida Zelvia","FC Osaka","FC Ryukyu","FC Tokyo","Fujieda MYFC","Fukushima United","Gainare Tottori","Gamba Osaka","Giravanz Kitakyushu","Hokkaido Consadole Sapporo","Iwaki FC","Iwate Grulla Morioka","JEF United Chiba","Júbilo Iwata","Kagoshima United","Kamatamare Sanuki","Kashima Antlers","Kashiwa Reysol","Kataller Toyama","Kawasaki Frontale","Kyoto Sanga","Matsumoto Yamaga","Mito Hollyhock","Montedio Yamagata","Nagoya Grampus","Nara Club","Oita Trinita","Omiya Ardija","Renofa Yamaguchi","Roasso Kumamoto","S.C. Sagamihara","Sagan Tosu","Sanfrecce Hiroshima","Shimizu S-Pulse","Shonan Bellmare","Tegevajaro Miyazaki","Thespa Gunma","Tochigi SC","Tokushima Vortis","Tokyo Verdy","Urawa Red Diamonds","V-Varen Nagasaki","Vanraure Hachinohe","Vegalta Sendai","Ventforet Kofu","Vissel Kobe","Yokohama F. Marinos","Yokohama FC","Zweigen Kanazawa"]};
+function clubsOf(cc){if(!cc||cc==='KZ')return clubs();const x=((S.xclubs||{})[cc]||[]);return [...new Set([...(CLUBDB[cc]||[]),...x])].sort((a,b)=>a.localeCompare(b,'en',{sensitivity:'base'}))}
+const OPP_CC=()=>['KZ',...COUNTRIES.map(c=>c[0]).filter(c=>c!=='KZ'&&(CLUBDB[c]||((S.xclubs||{})[c]||[]).length))];
+function clubCC(club){if(!club)return 'KZ';if((S.clubs||[]).includes(club))return 'KZ';for(const c in CLUBDB)if(CLUBDB[c].includes(club))return c;for(const c in (S.xclubs||{}))if(S.xclubs[c].includes(club))return c;return 'KZ'}
+const rivCC=m=>m.rcc||clubCC(splitRival(m.rival).club);
+function crestHue(n){let h=0;for(const ch of n)h=(h*31+ch.charCodeAt(0))>>>0;return h%360}
+function crest(name,cls){const club=splitRival(name).club;if(!club)return '';const lg=(S.clogos||{})[club]||CRESTS[club];if(lg)return `<img class="crest${cls?' '+cls:''}" src="${lg}" alt="">`;const ini=club.replace(/^(FC|FK|SC|SK|CF|AC|AS|RC|CD|UD|SD|KF|NK|HNK|PFC|FCSB)\s+/i,'').split(/[\s\-/]+/).filter(w=>/^[\p{L}\d]/u.test(w)).slice(0,2).map(w=>w[0]).join('').toUpperCase();const h=crestHue(club);return `<span class="crest gen${cls?' '+cls:''}" style="--ch:${h}">${esc(ini||'?')}</span>`}
+const ownTeams=()=>S.gens.flatMap(g=>[[g.id+'|0',g.code]].concat(g.filial?[[g.id+'|1',fcode(g)]]:[]));
+const ownLabel=k=>(ownTeams().find(x=>x[0]===k)||[,''])[1];
+const ownName=k=>'ATM '+ownLabel(k);
+function crestM(m){if(m.intra)return S.logo?`<img class="crest" src="${S.logo}" alt="">`:crest('ATM');return m.rival?crest(m.rival):''}
+function clubs(){return (S.clubs||[]).slice().sort((a,b)=>a.localeCompare(b,'en',{sensitivity:'base'}))}
+function teamYear(g){if(!g)return '';const y=(g.name+' '+g.code).match(/20\d\d/);if(y)return y[0];const c=(g.code||'').match(/\d\d/);return c?'20'+c[0]:''}
+const fcode=g=>g.fcode||(g.code+'F');
+const fname=g=>g.fname||(g.name+' · B team');
+function teamLabel(m){const g=gen(m.gen);if(!g)return m.type==='holiday'?'ALL':'—';return m.filial?fcode(g):g.code}
+
+/* ---------- storage ---------- */
+function readLocal(){try{const t=localStorage.getItem(LSKEY);return t?JSON.parse(t):null}catch(e){return null}}
+function writeLocal(){try{localStorage.setItem(LSKEY,JSON.stringify(S))}catch(e){}}
+function setStatus(t){$('#status').textContent=t}
+function save(){
+  if(!owner)return;
+  S.savedAt=Date.now();writeLocal();
+  if(!art||!remoteOK){setStatus(art===null?'· Saved in this browser.':'· Saved in this browser only.');return}
+  setStatus('· Unsaved changes…');
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(async()=>{
+    setStatus('· Saving…');
+    try{await art.publish({'data.json':{content:JSON.stringify(S),contentType:'application/json'}});setStatus('· Saved.')}
+    catch(e){
+      const c=e&&e.code;
+      if(c==='conflict'){setStatus('· Someone else saved at the same time; loading their version.')}
+      else if(c==='rate_limited'||c==='upstream_error'){setStatus('· Could not save right now; it will retry with your next change.')}
+      else if(tryEdit){revertEdit(c)}
+      else{remoteOK=false;setStatus('· This view is read-only: changes stay in this browser.')}
+    }
+  },2500);
+}
+
+/* ---------- render sheets ---------- */
+function chip(m){
+  const g=gen(m.gen);const base=g?g.color:'#8A8FA3';
+  const bg=m.filial?light(base):base, b=m.filial?base:dark(base);
+  const t=m.tbd?'Date TBC':(m.time||'Time TBC');
+  const pd=m.tbd||!m.time;
+  if(m.type==='holiday')return `<button class="chip hol" data-id="${m.id}" style="--b:${g?b:'#5A4300'};--bf:${g?ink(b):'#FFFFFF'}" title="${esc((g?teamLabel(m):'All teams')+' holidays'+(m.end&&m.end>m.date?' '+m.date+' to '+m.end:''))}"><span class="cd">${esc(g?teamLabel(m):'ALL')}</span><span class="bd"><span class="tl">Holidays</span></span></button>`;
+  if(m.type==='training')return `<button class="chip tr${pd?' pd':''}" data-id="${m.id}" style="--c:#FFFFFF;--cf:${dark(base)};--bd:${bg};--b:${b};--bf:${ink(b)}" title="${esc(teamLabel(m)+' training'+(m.note?' · '+m.note:''))}"><span class="cd">${esc(teamLabel(m))}</span><span class="bd"><span class="r1"><span class="tl">Training</span><span class="tm">${esc(t)}</span></span>${m.note?`<span class="rv">${esc(m.note)}</span>`:''}</span></button>`;
+  const c=comp(m.comp);
+  const cp=c?`<span class="cp">${c.logo?`<img src="${c.logo}" alt="${esc(c.name)}">`:`<b>${esc(c.short)}</b>`}</span>`:'';
+  const vn0=venueOf(m);const vn=vn0?`<span class="vn">${esc(vn0.replace(/ Region$/,'').toUpperCase())}</span>`:'';const ha=m.home?'<span class="ha h"><i>HOME</i><u>H</u></span>':'<span class="ha a"><i>AWAY</i><u>A</u></span>';
+  return `<button class="chip${pd?' pd':''}${m.pend?' pend':''}" data-id="${m.id}" style="--c:${bg};--cf:${ink(bg)};--b:${b};--bf:${ink(b)}" title="${esc(teamLabel(m)+' '+(m.home?'HOME vs':'AWAY at')+' '+(m.rival||'opponent TBC')+(venueOf(m)?' · '+venueOf(m):'')+(c?' · '+c.name:'')+(m.note?' · '+m.note:''))}"><span class="cd">${esc(teamLabel(m))}</span><span class="bd"><span class="r1">${ha}${cp}${m.pend?'<span class="pdg">PENDING</span>':''}${hasRes(m)?`<span class="sc ${resWDL(m)}">FT ${m.gf}–${m.ga}</span>`:`<span class="tm">${esc(t)}</span>`}</span>${vn}<span class="rv">${crestM(m)}${esc(m.rival||'Opponent TBC')}${m.note?` <span class="nt">· ${esc(m.note)}</span>`:''}</span></span></button>`;
+}
+function dayChips(list,k){
+  const hol=list.filter(m=>m.type==='holiday'), tours=list.filter(m=>m.type==='tour'), rest=list.filter(m=>!isSpan(m)).sort(sortM);
+  let h='';
+  const byName={};tours.forEach(m=>{const n=(m.name||'International tournament').trim();(byName[n]=byName[n]||[]).push(m)});
+  for(const [n,ms] of Object.entries(byName)){
+    const seen=new Set();const tags=ms.slice().sort(sortM).filter(m=>{const t=teamLabel(m);if(seen.has(t))return false;seen.add(t);return true}).map(m=>{const g=gen(m.gen);const b=g?(m.filial?light(g.color):g.color):'#F2C230';return `<b style="--hb:${b};--hf:${ink(b)}">${esc(g?teamLabel(m):'ALL')}</b>`}).join('');
+    h+=`<button class="chip hol tour" data-hday="${k}" title="${esc(n)}"><span class="hc">${tags}</span><span class="bd"><span class="tl">🏆 ${flagHtml((ms.find(x=>x.cc)||{}).cc)} ${esc(n)}${(()=>{const x=ms.find(y=>y.city||y.treg);return x?' · '+esc(x.city||x.treg):''})()}</span></span></button>`;
+  }
+  if(hol.length){
+    const seen=new Set();const tags=hol.slice().sort(sortM).filter(m=>{const t=teamLabel(m);if(seen.has(t))return false;seen.add(t);return true}).map(m=>{const g=gen(m.gen);const b=g?(m.filial?g.color:dark(g.color)):'#5A4300';return `<b style="--hb:${b};--hf:${ink(b)}">${esc(g?teamLabel(m):'ALL')}</b>`}).join('');
+    h=`<button class="chip hol" data-hday="${k}" title="Holidays"><span class="hc">${tags}</span><span class="bd"><span class="tl">Holidays</span></span></button>`+h;
+  }
+  return h+rest.map(chip).join('');
+}
+const sortM=(a,b)=>((b.type==='holiday')-(a.type==='holiday'))||((b.type==='tour')-(a.type==='tour'))||(a.time||'99').localeCompare(b.time||'99')||S.gens.findIndex(g=>g.id===a.gen)-S.gens.findIndex(g=>g.id===b.gen)||(a.filial-b.filial);
+
+function sheet([y,mo],idx,part){
+  const first=new Date(y,mo,1), last=new Date(y,mo+1,0);
+  let d=addD(first,-dowi(first)); const end=addD(last,6-dowi(last));
+  const byDay={},byWe={};
+  for(const m of S.matches){
+    if(isSpan(m)&&m.end&&m.end>m.date){let x=parse(m.date);for(let n=0;n<400&&key(x)<=m.end;n++,x=addD(x,1)){const kk=key(x);(byDay[kk]=byDay[kk]||[]).push(m)}continue}
+    (m.tbd?byWe:byDay)[m.date]=((m.tbd?byWe:byDay)[m.date]||[]).concat(m)}
+  const W=[];
+  while(d<=end){
+    let cells='';
+    for(let i=0;i<7;i++){
+      const k=key(d), inm=d.getMonth()===mo, we=i>4;
+      const evs=dayChips(byDay[k]||[],k);
+      cells+=`<div class="day${we?' we':' narrow'}${inm?'':' out'}" data-day="${k}"><span class="num">${d.getDate()}</span><div class="evs">${evs}</div></div>`;
+      d=addD(d,1);
+    }
+    const sat=key(addD(d,-2)), sun=addD(d,-1);
+    const satIn=addD(d,-2).getMonth()===mo||sun.getMonth()===mo;
+    const tb=satIn?(byWe[sat]||[]).slice().sort(sortM):[];
+    if(tb.length)cells+=`<div class="band" data-we="${sat}"><span class="tag">Date TBC · Sat ${addD(d,-2).getDate()} / Sun ${sun.getDate()}</span><div class="evs">${tb.map(chip).join('')}</div></div>`;
+    W.push(`<div class="week">${cells}</div>`);
+  }
+  const lg=S.gens.map(g=>`<div><i style="background:${g.color}"></i><span><b>${esc(g.code)}</b> ${esc(g.name)}</span></div>`+(g.filial?`<div><i style="background:${light(g.color)}"></i><span><b>${esc(fcode(g))}</b> ${esc(fname(g))}</span></div>`:'')).join('');
+  const half=Math.ceil(W.length/2);const weeks=(part===0?W.slice(0,half):part===1?W.slice(half):W).join('');
+  return `<section class="page" id="m${idx}${part===1?'b':''}" data-mi="${idx}"><div class="sheet">
+    <header class="hd"><div><div class="club">${esc(S.club)}</div><div class="mes">${MESES[mo]} <span class="anio">${y}</span></div><div class="sub">Season 2026/27 · Month ${idx+1} of 9${part===undefined?'':' · Part '+(part+1)+' of 2'}</div></div>
+    <div class="logo">${S.logo?`<img src="${S.logo}" alt="${esc(S.club)} logo">`:`<button class="logoph" data-logo>+ Add logo</button>`}</div></header>
+    <div class="cal"><div class="dow">${DOW.map((n,i)=>`<div class="${i>4?'we':''}">${n}</div>`).join('')}</div>${weeks}</div>
+    <div class="legend"><div><div class="lgt">Teams · Команды</div><div class="lg">${lg}</div></div>${S.comps&&S.comps.length?`<div><div class="lgt">Competitions · Соревнования</div><div class="lg">${S.comps.map(c=>`<div>${c.logo?`<img class="cpl" src="${c.logo}" alt="">`:`<span class="cpt">${esc(c.short)}</span>`}<span>${esc(c.name)}</span></div>`).join('')}<div><span class="tlg">🏆</span><span>International tournament</span></div></div></div>`:''}</div>
+    <div class="ft"><div><span>HOME home game · AWAY away game · TBC to be confirmed · Lighter colour = B team · Outlined = training · Striped = holidays · Dashed = pending · 🏆 = tournament</span><span>${MESES[mo]} ${y}</span></div><div><span>HOME дома · AWAY в гостях · TBC уточняется · Светлый цвет = команда B · Контур = тренировка · Полоски = каникулы · Пунктир = не подтверждён · 🏆 = турнир</span><span>${MESES_RU[mo]} ${y}</span></div></div>
+  </div></section>`;
+}
+function fit(root){
+  (root||document).querySelectorAll('.day .evs').forEach(ev=>{
+    ev.querySelectorAll('.more').forEach(x=>x.remove());
+    const ch=[...ev.children];ch.forEach(c=>c.hidden=false);
+    if(ev.scrollHeight<=ev.clientHeight+1)return;
+    const mo=document.createElement('button');mo.className='more';ev.appendChild(mo);
+    let hid=0;
+    for(let i=ch.length-1;i>=0&&ev.scrollHeight>ev.clientHeight+1;i--){ch[i].hidden=true;hid++;mo.textContent=`+${hid} more`}
+  });
+}
+function paint(){$('#pages').innerHTML=SEASON.map((m,i)=>sheet(m,i)).join('')}
+const TIGHT=['t1','t2','t3'];
+function autosplit(){
+  document.querySelectorAll('.page').forEach(p=>{
+    p.classList.remove(...TIGHT);fit(p);
+    for(const t of TIGHT){if(!p.querySelector('.more'))break;p.classList.remove(...TIGHT);p.classList.add(t);fit(p)}
+  });
+}
+function render(){
+  paint();
+  $('#exnote').hidden=!S.matches.some(m=>m.ex);
+  requestAnimationFrame(autosplit);
+  if(document.fonts)document.fonts.ready.then(()=>requestAnimationFrame(autosplit));
+  setTimeout(autosplit,400);
+}
+function renderTeams(){
+  $('#tlist').innerHTML=S.gens.map((g,i)=>`<div class="trow" data-i="${i}">
+    <span class="sw"><i style="background:${g.color}"></i><i style="background:${g.filial?light(g.color):'transparent'}"></i></span>
+    <input class="inp" aria-label="Code" id="code-${g.id}" data-k="code" value="${esc(g.code)}" maxlength="5">
+    <input class="inp" aria-label="Name" id="name-${g.id}" data-k="name" value="${esc(g.name)}" maxlength="40">
+    <input type="color" aria-label="Colour" id="color-${g.id}" data-k="color" value="${g.color}">
+    <label class="chk"><input type="checkbox" id="fil-${g.id}" data-k="filial" ${g.filial?'checked':''}> B team</label>
+    <button class="btn warn del" data-del="${i}">Remove</button>
+    ${g.filial?`<span></span><input class="inp" aria-label="B team code" id="fcode-${g.id}" data-k="fcode" value="${esc(fcode(g))}" maxlength="6"><input class="inp" aria-label="B team name" id="fname-${g.id}" data-k="fname" value="${esc(fname(g))}" maxlength="40" style="grid-column:span 4">`:''}</div>`).join('');
+}
+$('#tlist').addEventListener('input',e=>{
+  const r=e.target.closest('.trow');if(!r)return;const g=S.gens[+r.dataset.i];const k=e.target.dataset.k;
+  g[k]=k==='filial'?e.target.checked:e.target.value;
+  if(k==='filial'){renderTeams()}else if(k==='color'){const sw=r.querySelectorAll('.sw i');sw[0].style.background=g.color;sw[1].style.background=g.filial?light(g.color):'transparent'}
+  render();save();
+});
+$('#tlist').addEventListener('click',e=>{
+  const b=e.target.closest('[data-del]');if(!b)return;
+  const g=S.gens[+b.dataset.del];const n=S.matches.filter(m=>m.gen===g.id).length;
+  if(n&&!b.dataset.sure){b.dataset.sure=1;b.textContent=`Remove? Deletes ${n} match${n>1?'es':''}`;return}
+  S.matches=S.matches.filter(m=>m.gen!==g.id);S.gens.splice(+b.dataset.del,1);renderTeams();render();save();
+});
+$('#addgen').onclick=()=>{
+  const used=new Set(S.gens.map(g=>g.color));const c=FALLBACK_COLORS.find(x=>!used.has(x))||'#607D8B';
+  S.gens.push({id:'g'+uid(),code:'NEW',name:'New age group',color:c,filial:true});renderTeams();render();save();
+  const r=$('#tlist').lastElementChild;r&&r.querySelector('input').focus();
+};
+$('#club').addEventListener('input',e=>{S.club=e.target.value;document.querySelectorAll('.club').forEach(x=>x.textContent=S.club);clearTimeout(window._ct);window._ct=setTimeout(save,600)});
+function setLogo(file){
+  if(!file)return;const fr=new FileReader();
+  fr.onload=()=>{const im=new Image();im.onload=()=>{
+    const w=im.naturalWidth||600,h=im.naturalHeight||600,k=Math.min(1,600/Math.max(w,h));
+    const c=document.createElement('canvas');c.width=Math.round(w*k);c.height=Math.round(h*k);
+    c.getContext('2d').drawImage(im,0,0,c.width,c.height);S.logo=c.toDataURL('image/png');$('#logodel').hidden=false;render();save();
+  };im.onerror=()=>setStatus('· That file could not be read as an image.');im.src=fr.result};
+  fr.readAsDataURL(file);
+}
+$('#logofile').addEventListener('change',e=>{setLogo(e.target.files[0]);e.target.value=''});
+$('#logodel').onclick=()=>{delete S.logo;$('#logodel').hidden=true;render();save()};
+function renderComps(){
+  $('#clist').innerHTML=(S.comps||[]).map((c,i)=>`<div class="crow" data-i="${i}">
+    <span class="pv">${c.logo?`<img src="${c.logo}" alt="">`:'No logo'}</span>
+    <input class="inp" aria-label="Short code" id="cs-${c.id}" data-k="short" value="${esc(c.short)}" maxlength="6">
+    <input class="inp" aria-label="Competition name" id="cn-${c.id}" data-k="name" value="${esc(c.name)}" maxlength="40">
+    <button class="btn" data-up="${i}">${c.logo?'Change logo':'Upload logo'}</button>
+    <button class="btn warn" data-cdel="${i}">Remove</button></div>`).join('');
+}
+let upIdx=-1;
+$('#clist').addEventListener('input',e=>{const r=e.target.closest('.crow');if(!r)return;S.comps[+r.dataset.i][e.target.dataset.k]=e.target.value;render();save()});
+$('#clist').addEventListener('click',e=>{
+  const u=e.target.closest('[data-up]');if(u){upIdx=+u.dataset.up;return $('#complogo').click()}
+  const d=e.target.closest('[data-cdel]');if(!d)return;
+  const c=S.comps[+d.dataset.cdel];
+  const n=S.matches.filter(m=>m.comp===c.id).length;
+  if(n&&!d.dataset.sure){d.dataset.sure=1;d.textContent=`Remove from ${n} match${n>1?'es':''}?`;return}
+  S.matches.forEach(m=>{if(m.comp===c.id)m.comp=''});S.comps.splice(+d.dataset.cdel,1);renderComps();render();save();
+});
+$('#complogo').addEventListener('change',e=>{
+  const file=e.target.files[0];e.target.value='';if(!file||upIdx<0)return;const c=S.comps[upIdx];
+  const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{
+    const w=im.naturalWidth||200,h=im.naturalHeight||200,k=Math.min(1,240/Math.max(w,h));
+    const cv=document.createElement('canvas');cv.width=Math.round(w*k);cv.height=Math.round(h*k);
+    cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);c.logo=cv.toDataURL('image/png');renderComps();render();save();
+  };im.onerror=()=>setStatus('· That file could not be read as an image.');im.src=fr.result};fr.readAsDataURL(file);
+});
+$('#addcomp').onclick=()=>{S.comps.push({id:'c'+uid(),short:'NEW',name:'New competition'});renderComps();render();save();const r=$('#clist').lastElementChild;r&&r.querySelectorAll('input')[1].focus()};
+function renderClubs(){$('#clubtxt').value=clubs().join('\n');const n=(S.clubs||[]).length+Object.values(CLUBDB).reduce((a,l)=>a+l.length,0);$('#clubcount').textContent='· '+n+' clubs · '+OPP_CC().length+' countries';
+  const sel=$('#cl-cc');const cur=sel.value||'KZ';sel.innerHTML=OPP_CC().map(c=>`<option value="${c}" ${c===cur?'selected':''}>${flagOf(c)} ${esc(ctryName(c))} (${clubsOf(c).length})</option>`).join('');renderClubList()}
+function renderClubList(){const cc=$('#cl-cc').value||'KZ';$('#cl-kz').hidden=cc!=='KZ';
+  $('#cl-list').innerHTML=clubsOf(cc).map(c=>`<div class="clrow" data-club="${esc(c)}">${crest(c)}<span>${esc(c)}</span><button type="button" class="btn" data-lg>Logo</button>${(S.clogos||{})[c]?'<button type="button" class="btn warn" data-lgdel>Reset</button>':'<span></span>'}</div>`).join('')}
+let lgClub=null;
+$('#cl-cc').onchange=renderClubList;
+$('#cl-list').onclick=e=>{const r=e.target.closest('.clrow');if(!r)return;const c=r.dataset.club;if(e.target.closest('[data-lg]')){lgClub=c;$('#cl-file').click()}else if(e.target.closest('[data-lgdel]')){delete S.clogos[c];renderClubList();render();save()}};
+$('#cl-file').addEventListener('change',e=>{const file=e.target.files[0];e.target.value='';if(!file||!lgClub)return;const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,96/Math.max(im.naturalWidth||96,im.naturalHeight||96));const cv=document.createElement('canvas');cv.width=Math.max(1,Math.round((im.naturalWidth||96)*k));cv.height=Math.max(1,Math.round((im.naturalHeight||96)*k));cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);S.clogos=S.clogos||{};S.clogos[lgClub]=cv.toDataURL('image/png');renderClubList();render();save()};im.onerror=()=>setStatus('· That file could not be read as an image.');im.src=fr.result};fr.readAsDataURL(file)});
+$('#clubsave').onclick=()=>{const seen=new Map();$('#clubtxt').value.split('\n').map(x=>x.trim()).filter(Boolean).forEach(x=>{const k=x.toLowerCase();if(!seen.has(k))seen.set(k,x)});S.clubs=[...seen.values()];renderClubs();save();$('#clubmsg').textContent='Saved '+S.clubs.length+' clubs.'};
+$('#clearex').onclick=()=>{S.matches=S.matches.filter(m=>!m.ex);render();save()};
+
+/* ---------- dialog ---------- */
+const ov=$('#ov'),dlg=$('#dlg');
+function close(){ov.hidden=true;dlg.innerHTML=''}
+ov.addEventListener('click',e=>{if(e.target===ov)close()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!ov.hidden)close()});
+function shortDay(k){const d=parse(k);return `${d.getDate()} ${MESES[d.getMonth()].slice(0,3)}`}
+function fmtDay(k){const d=parse(k);return `${DOWL[dowi(d)]} ${d.getDate()} ${MESES[d.getMonth()]}`}
+
+function openDay(k){
+  const d=parse(k), we=dowi(d)>4, sat=saturdayOf(k);
+  const list=S.matches.filter(m=>(isSpan(m)&&((m.end&&m.date<=k&&k<=m.end)||m.date===k))||(!isSpan(m)&&!m.tbd&&m.date===k)||(we&&m.tbd&&m.date===sat)).sort(sortM);
+  if(!list.length){if(owner)return openForm(null,k);return}
+  dlg.innerHTML=`<h2>${fmtDay(k)}<small>${list.length} event${list.length>1?'s':''}</small></h2>
+  <div class="daylist">${list.map(m=>{const g=gen(m.gen);const c=g?(m.filial?light(g.color):g.color):'#999';return `<button data-id="${m.id}"><i style="background:${c}"></i><span><b>${esc(teamLabel(m))}</b> ${m.type==='tour'?'🏆 '+flagHtml(m.cc)+' '+esc(m.name||'International tournament')+(tPlace(m,1)?' ('+esc(tPlace(m,1))+')':'')+(m.end&&m.end>m.date?' · '+shortDay(m.date)+' – '+shortDay(m.end):''):m.type==='holiday'?'Holidays'+(m.end&&m.end>m.date?' · '+shortDay(m.date)+' – '+shortDay(m.end):''):m.type==='training'?'Training':(m.home?'HOME vs ':'AWAY at ')+esc(m.rival||'opponent TBC')+(venueOf(m)?' · '+esc(venueOf(m)):'')+(comp(m.comp)?' · '+esc(comp(m.comp).name):'')}${m.pend?' · PENDING':''}${m.note?' · '+esc(m.note):''}${m.kit?' · Kit: '+esc(m.kit):''}</span><span class="t">${isSpan(m)?'':m.tbd?'Weekend, date TBC':(m.time||'Time TBC')}</span></button>`}).join('')}</div>
+  <div class="acts"><button class="btn" id="x">Close</button><button class="btn pri" id="add">Add event</button></div>`;
+  ov.hidden=false;
+  if(!owner){$('#add').hidden=true;$('#x').onclick=close;$('#x').focus();return}
+  dlg.querySelectorAll('.daylist button').forEach(b=>b.onclick=()=>openForm(S.matches.find(m=>m.id===b.dataset.id)));
+  $('#x').onclick=close;$('#add').onclick=()=>openForm(null,k);$('#add').focus();
+}
+function openForm(m,k){
+  const isNew=!m;
+  m=m?{...m}:{id:uid(),type:'match',gen:(S.gens[0]||{}).id,filial:false,rival:'',time:'',home:true,date:k,tbd:false,note:''};
+  const isTr=m.type==='training', isHol=m.type==='holiday', isTou=m.type==='tour';
+  const op=splitRival(m.rival);const rcc0=m.intra?'__own':rivCC(m);const opOther=!m.intra&&!!m.rival&&!clubsOf(rcc0).includes(op.club);if(!m.rival&&isNew){op.year=teamYear(gen(m.gen))}else if(!m.rival){op.club=''}
+  const opts=S.gens.map(g=>`<option value="${g.id}|0" ${m.gen===g.id&&!m.filial?'selected':''}>${esc(g.code)} · ${esc(g.name)}</option>${g.filial?`<option value="${g.id}|1" ${m.gen===g.id&&m.filial?'selected':''}>${esc(fcode(g))} · ${esc(fname(g))}</option>`:''}`).join('');
+  dlg.innerHTML=`<h2>${isNew?'New event':(isTou?'Edit tournament':isHol?'Edit holidays':isTr?'Edit training':'Edit match')}<small>${m.tbd?'Weekend of '+fmtDay(m.date):(isHol||isTou)&&m.end&&m.end>m.date?fmtDay(m.date)+' – '+fmtDay(m.end):fmtDay(m.date)}</small></h2>
+  <form id="f" style="display:flex;flex-direction:column;gap:12px">
+    <div class="seg" role="radiogroup" aria-label="Type"><label><input type="radio" name="ty" id="f-match" value="match" ${isTr||isHol||isTou?'':'checked'}>Match</label><label><input type="radio" name="ty" id="f-tr" value="training" ${isTr?'checked':''}>Training</label><label><input type="radio" name="ty" id="f-hol" value="holiday" ${isHol?'checked':''}>Holidays</label><label><input type="radio" name="ty" id="f-tou" value="tour" ${isTou?'checked':''}>Tournament</label></div>
+    <div class="field to"><label for="f-tname">Tournament name</label><input id="f-tname" class="inp" value="${esc(m.name||'')}" placeholder="e.g. Mediterranean International Cup" maxlength="50"><span class="hint">It shows on every day of the tournament. Matches you add on those days still appear normally.</span></div>
+    <div class="grid2 to"><div class="field"><label for="f-cc">Country</label><select id="f-cc" class="inp flgsel"><option value="">Choose country…</option>${COUNTRIES.map(([c,n])=>`<option value="${c}" ${m.cc===c?'selected':''}>${flagOf(c)} ${esc(n)}</option>`).join('')}</select></div><div class="field"><label for="f-csel">Region</label><select id="f-csel" class="inp"></select><input id="f-treg" class="inp" placeholder="Type the region" maxlength="40" hidden style="margin-top:6px"></div></div>
+    <div class="field to"><label for="f-city">City</label><input id="f-city" class="inp" list="f-citylist" value="${esc(m.city||'')}" placeholder="Type the city" maxlength="40" autocomplete="off"><datalist id="f-citylist"></datalist></div>
+    <div class="field"><label for="f-team">Team</label><select id="f-team" class="inp"><option value="all|0" id="f-all" ${(isHol||isTou)&&!gen(m.gen)?'selected':''}>All teams</option>${opts}</select></div>
+    <div class="field mo"><label for="f-club">Opponent</label><div class="opp">
+      <select id="f-rcc" class="inp flgsel" aria-label="Opponent country"><option value="__own" ${rcc0==='__own'?'selected':''}>🏠 Our club (internal match)</option>${OPP_CC().map(c=>`<option value="${c}" ${c===rcc0?'selected':''}>${flagOf(c)} ${esc(ctryName(c))}</option>`).join('')}</select>
+      <select id="f-club" class="inp" aria-label="Club"></select>
+      <select id="f-ryear" class="inp" aria-label="Age group"><option value="">Year</option>${Array.from({length:13},(_,i)=>2008+i).map(y=>`<option ${String(y)===op.year?'selected':''}>${y}</option>`).join('')}</select>
+      <select id="f-rlet" class="inp" aria-label="Team letter"><option value="">–</option>${['A','B','C','D','E'].map(l=>`<option ${l===op.letter?'selected':''}>${l}</option>`).join('')}</select>
+    </div><input id="f-rival" class="inp" value="${esc(opOther?m.rival:'')}" placeholder="Club name, e.g. FC Velvet 2012 A — it is added to the list" maxlength="40" ${opOther?'':'hidden'}><span class="opv" id="f-opv"></span></div>
+    <div class="seg mo" role="radiogroup" aria-label="Venue"><label><input type="radio" name="hv" id="f-l" value="1" ${m.home?'checked':''}>Home</label><label><input type="radio" name="hv" id="f-v" value="0" ${m.home?'':'checked'}>Away</label></div>
+    <div class="field mo"><label for="f-region" id="f-venl">Venue</label><select id="f-ground" class="inp" aria-label="Home ground">${HOME_GROUNDS.map(g=>`<option ${groundOf(m)===g?'selected':''}>${g}</option>`).join('')}</select><select id="f-region" class="inp"><option value="">Region TBC</option>${REGIONS.map(r=>`<option ${r===m.region?'selected':''}>${esc(r)}</option>`).join('')}</select></div>
+    <div class="field mo"><label for="f-gf">Result (after the match)</label><div class="resin"><span>ATM</span><input id="f-gf" class="inp" type="number" min="0" max="99" inputmode="numeric" value="${hasRes(m)?m.gf:''}" aria-label="ATM goals"><b>–</b><input id="f-ga" class="inp" type="number" min="0" max="99" inputmode="numeric" value="${hasRes(m)?m.ga:''}" aria-label="Opponent goals"><span>Opp.</span></div></div>
+    <label class="chk mo"><input type="checkbox" id="f-pend" ${m.pend?'checked':''}> Pending — not confirmed yet</label>
+    <div class="field mo"><label for="f-comp">Competition</label><select id="f-comp" class="inp"><option value="">None</option>${(S.comps||[]).map(c=>`<option value="${c.id}" ${m.comp===c.id?'selected':''}>${esc(c.name)}</option>`).join('')}</select></div>
+    <div class="grid2 nh">
+      <div class="field"><label for="f-kit">Uniform kit</label><select id="f-kit" class="inp"><option value="">Not decided yet</option>${KITS.map(([v])=>`<option ${m.kit===v?'selected':''}>${v}</option>`).join('')}</select></div>
+      <div class="field"><label for="f-ref">Ask for referee</label><select id="f-ref" class="inp"><option value="">No</option><option value="1" ${m.ref?'selected':''}>Yes</option></select></div>
+    </div>
+    <div class="field nh"><label for="f-link">Stream link (optional)</label><input id="f-link" class="inp" type="url" value="${esc(m.link||'')}" placeholder="https://www.youtube.com/@j-liga/streams"></div>
+    <div class="field nh"><label for="f-place">Place in the WhatsApp message (optional)</label><input id="f-place" class="inp" value="${esc(m.place||'')}" placeholder="Home: ATM Complex, Aqbulaq · Away: the region"></div>
+    <div class="grid2">
+      <div class="field"><label for="f-date" id="f-datel">Date</label><input type="date" id="f-date" class="inp" value="${m.date}" min="2026-09-28" max="2027-07-04"></div>
+      <div class="field ho"><label for="f-end">Last day</label><input type="date" id="f-end" class="inp" value="${m.end||m.date}" min="2026-09-28" max="2027-07-04"></div>
+      <div class="field nh"><label for="f-time">Kick-off</label><input type="time" id="f-time" class="inp" value="${esc(m.time)}" ${m.tbd||(!isNew&&!m.time)?'disabled':''}></div>
+    </div>
+    <label class="chk nh"><input type="checkbox" id="f-ttbc" ${!isNew&&!m.tbd&&!m.time?'checked':''} ${m.tbd?'disabled':''}> Time TBC (date confirmed, time not yet)</label>
+    <label class="chk nh"><input type="checkbox" id="f-tbd" ${m.tbd?'checked':''}> Date TBC (spans Saturday and Sunday)</label>
+    <div class="field nh"><label for="f-note">Note (optional)</label><input id="f-note" class="inp" value="${esc(m.note)}" placeholder="Cup, friendly, pitch…" maxlength="24"></div>
+    <p class="hint nh">With “Time TBC” the match stays on its day and shows “Time TBC” until you add the kick-off.</p>
+    <div class="acts">${isNew?'':'<button type="button" class="btn warn" id="f-del">Delete</button>'}<span class="sp"></span><button type="button" class="btn" id="f-x">Cancel</button><button class="btn pri" type="submit">Save</button></div>
+  </form>`;
+  ov.hidden=false;
+  const tbd=$('#f-tbd'),tm=$('#f-time'),ttbc=$('#f-ttbc');
+  const syncTime=()=>{ttbc.disabled=tbd.checked;tm.disabled=tbd.checked||ttbc.checked;if(tm.disabled)tm.value=''};
+  tbd.onchange=ttbc.onchange=syncTime;
+  const syncType=()=>{const tr=$('#f-tr').checked,tou=$('#f-tou').checked,ho=$('#f-hol').checked||tou;dlg.querySelectorAll('.mo').forEach(x=>x.hidden=tr||ho);dlg.querySelectorAll('.nh').forEach(x=>x.hidden=ho);dlg.querySelectorAll('.ho').forEach(x=>x.hidden=!ho);dlg.querySelectorAll('.to').forEach(x=>x.hidden=!tou);if(tr&&!$('#f-kit').value)$('#f-kit').value='Training kit';$('#f-datel').textContent=ho?'First day':'Date';const al=$('#f-all');al.hidden=al.disabled=!ho;if(!ho&&$('#f-team').value==='all|0')$('#f-team').selectedIndex=1};
+  $('#f-match').onchange=$('#f-tr').onchange=$('#f-hol').onchange=$('#f-tou').onchange=syncType;syncType();
+  $('#f-date').addEventListener('change',()=>{const e2=$('#f-end');if(!e2.value||e2.value<$('#f-date').value)e2.value=$('#f-date').value});
+  const syncVen=()=>{const h=$('#f-l').checked;$('#f-ground').hidden=!h;$('#f-region').hidden=h;$('#f-venl').textContent=h?'Home ground':'Region (away)'};$('#f-l').addEventListener('change',syncVen);$('#f-v').addEventListener('change',syncVen);syncVen();
+  const fillClubs=keep=>{const cc=$('#f-rcc').value;if(cc==='__own'){const me=$('#f-team').value;$('#f-club').innerHTML=ownTeams().filter(([k])=>k!==me).map(([k,l])=>`<option value="own:${k}" ${keep&&m.intra===k?'selected':''}>${esc(l)} (our club)</option>`).join('');$('#f-rival').value='';return}const l=clubsOf(cc);const cur=keep?op.club:'';$('#f-club').innerHTML=`<option value="__tbc">Opponent TBC</option>`+l.map(c=>`<option ${c===cur?'selected':''}>${esc(c)}</option>`).join('')+`<option value="__other" ${keep&&opOther?'selected':''}>Other – new club (type it)…</option>`;if(!keep)$('#f-rival').value=''};
+  fillClubs(true);$('#f-rcc').addEventListener('change',()=>{fillClubs(false);syncOpp()});$('#f-team').addEventListener('change',()=>{if($('#f-rcc').value==='__own'){fillClubs(false);syncOpp()}});
+  const oppVal=()=>{const c=$('#f-club').value;if(c.startsWith('own:'))return ownName(c.slice(4));if(c==='__tbc')return '';if(c==='__other')return $('#f-rival').value.trim();return [c,$('#f-ryear').value,$('#f-rlet').value].filter(Boolean).join(' ')};
+  const syncOpp=()=>{const c=$('#f-club').value;$('#f-rival').hidden=c!=='__other';$('#f-ryear').disabled=$('#f-rlet').disabled=c==='__tbc'||c==='__other'||c.startsWith('own:');const v=oppVal();$('#f-opv').innerHTML=v?'Shows as: '+(c.startsWith('own:')?crestM({intra:1}):crest(v))+'<b>'+esc(v)+'</b>':'Shows as: <b>Opponent TBC</b>'};
+  ['f-club','f-ryear','f-rlet','f-rival'].forEach(id=>$('#'+id).addEventListener('input',syncOpp));syncOpp();
+  $('#f-team').addEventListener('change',()=>{if(!$('#f-ryear').value||isNew){const [gg]=$('#f-team').value.split('|');const y=teamYear(gen(gg));if(y){$('#f-ryear').value=y;syncOpp()}}});
+  const syncCity=keep=>{const cc=$('#f-cc').value;const l=REGS[cc]||[];let cur=keep?(m.treg||''):'';if(keep&&!m.treg&&m.city&&l.includes(m.city)){cur=m.city;$('#f-city').value=''}const inL=cur&&l.includes(cur);$('#f-csel').innerHTML=`<option value="">${l.length?'Choose region…':'—'}</option>`+l.map(c=>`<option ${c===cur?'selected':''}>${esc(c)}</option>`).join('')+`<option value="__other" ${cur&&!inL?'selected':''}>Other (type it)…</option>`;$('#f-treg').value=cur&&!inL?cur:'';$('#f-citylist').innerHTML=(CITYS[cc]||[]).map(c=>`<option value="${esc(c)}">`).join('');if(!keep)$('#f-city').value='';showCity()};
+  const showCity=()=>{const o=$('#f-csel').value==='__other';$('#f-treg').hidden=!o;if(o&&document.activeElement===$('#f-csel'))setTimeout(()=>$('#f-treg').focus(),0)};
+  $('#f-csel').addEventListener('change',showCity);$('#f-cc').addEventListener('change',()=>syncCity(false));syncCity(true);
+  $('#f-x').onclick=close;
+  if(!isNew)$('#f-del').onclick=e=>{const b=e.target;if(!b.dataset.sure){b.dataset.sure=1;b.textContent='Sure? Tap again';return}S.matches=S.matches.filter(x=>x.id!==m.id);close();render();save()};
+  $('#f').onsubmit=e=>{
+    e.preventDefault();
+    if(!S.gens.length)return;
+    const [g,f]=$('#f-team').value.split('|');
+    if($('#f-tou').checked){const dv=$('#f-date').value||m.date;const [hg,hf]=$('#f-team').value.split('|');let ev=$('#f-end').value||dv;if(ev<dv)ev=dv;const nm=$('#f-tname').value.trim()||'International tournament';const h={id:m.id,type:'tour',name:nm,cc:$('#f-cc').value,treg:$('#f-csel').value==='__other'?$('#f-treg').value.trim():$('#f-csel').value,city:$('#f-city').value.trim(),date:dv,end:ev,tbd:false,time:'',gen:hg==='all'?'':hg,filial:hf==='1',rival:'',home:true,note:'',comp:''};const i=S.matches.findIndex(x=>x.id===m.id);if(i>=0)S.matches[i]=h;else S.matches.push(h);close();render();save();return}
+    if($('#f-hol').checked){const dv=$('#f-date').value||m.date;const [hg,hf]=$('#f-team').value.split('|');let ev=$('#f-end').value||dv;if(ev<dv)ev=dv;const h={id:m.id,type:'holiday',date:dv,end:ev,tbd:false,time:'',gen:hg==='all'?'':hg,filial:hf==='1',rival:'',home:true,note:'',comp:''};const i=S.matches.findIndex(x=>x.id===m.id);if(i>=0)S.matches[i]=h;else S.matches.push(h);close();render();save();return}
+    m.type=$('#f-tr').checked?'training':'match';
+    m.gen=g;m.filial=f==='1';m.rival=m.type==='training'?'':oppVal();m.rcc=m.type==='training'?'':$('#f-rcc').value;{const cv=$('#f-club').value;if(m.type!=='training'&&cv.startsWith('own:')){m.intra=cv.slice(4);m.rcc='KZ'}else delete m.intra}if(m.type!=='training'&&$('#f-club').value==='__other'&&m.rival){const nc=splitRival(m.rival).club;const rc=m.rcc||'KZ';if(nc&&!clubsOf(rc).some(c=>c.toLowerCase()===nc.toLowerCase())){if(rc==='KZ')S.clubs=(S.clubs||[]).concat(nc);else{S.xclubs=S.xclubs||{};S.xclubs[rc]=(S.xclubs[rc]||[]).concat(nc)}renderClubs()}}m.comp=m.type==='training'?'':$('#f-comp').value;m.home=$('#f-l').checked;m.pend=m.type==='match'&&$('#f-pend').checked;m.region=m.home?'':$('#f-region').value;m.ground=m.home?$('#f-ground').value:'';{const a=$('#f-gf').value,b=$('#f-ga').value;if(m.type==='match'&&a!==''&&b!==''){m.gf=+a;m.ga=+b}else{delete m.gf;delete m.ga}}m.note=$('#f-note').value.trim();m.kit=$('#f-kit').value;m.ref=$('#f-ref').value==='1';m.link=$('#f-link').value.trim();m.place=$('#f-place').value.trim();
+    m.tbd=tbd.checked;let dv=$('#f-date').value||m.date;
+    m.date=m.tbd?saturdayOf(dv):dv;m.time=(m.tbd||ttbc.checked)?'':tm.value;delete m.ex;
+    const i=S.matches.findIndex(x=>x.id===m.id);if(i>=0)S.matches[i]=m;else S.matches.push(m);
+    close();render();save();
+  };
+  setTimeout(()=>(isTr?$('#f-team'):$('#f-club')).focus(),0);
+}
+$('#pages').addEventListener('click',e=>{
+  if(!owner){const mo=e.target.closest('.more');const dd=e.target.closest('.day');if(mo&&dd)openDay(dd.dataset.day);return}
+  if(e.target.closest('[data-logo]'))return $('#logofile').click();
+  const c=e.target.closest('.chip[data-id]');if(c){e.stopPropagation();return openForm(S.matches.find(m=>m.id===c.dataset.id))}
+  const day=e.target.closest('.day');if(day&&day.dataset.day)return openDay(day.dataset.day);
+  const band=e.target.closest('.band');if(band)return openDay(band.dataset.we);
+});
+
+/* ---------- PDF export ---------- */
+function loadScript(src){return new Promise((ok,ko)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=ko;document.head.appendChild(s)})}
+$('#pdf').onclick=async()=>{
+  const btn=$('#pdf');
+  let dl=null;try{dl=window.claude&&await window.claude.use('downloads')}catch(e){}
+btn.disabled=true;$('#busy').hidden=false;
+  try{
+    if(!window.html2canvas)await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+    if(!window.jspdf)await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+    try{await document.fonts.ready}catch(e){}
+    document.body.classList.add('exporting');autosplit();
+    const pdf=new window.jspdf.jsPDF({unit:'mm',format:'a4',orientation:'landscape'});
+    const pages=[...document.querySelectorAll('.page')];
+    for(let i=0;i<pages.length;i++){
+      $('#busy').textContent=`Building PDF… ${i+1}/${pages.length}`;
+      const cv=await window.html2canvas(pages[i],{scale:2.5,backgroundColor:'#FFFFFF',useCORS:true,logging:false});
+      if(i)pdf.addPage();
+      pdf.addImage(cv.toDataURL('image/jpeg',.93),'JPEG',0,0,297,210);
+    }
+    document.body.classList.remove('exporting');autosplit();
+    $('#busy').hidden=true;
+    if(dl)await dl.save({filename:'kazakhstan-academy-calendar-2026-27.pdf',data:pdf.output('blob')});else pdf.save('kazakhstan-academy-calendar-2026-27.pdf');
+    setStatus('· PDF ready.');
+  }catch(e){
+    if(!(e&&e.code==='cancelled'))setStatus('· Could not build the PDF. Try again.');
+  }finally{document.body.classList.remove('exporting');$('#busy').hidden=true;$('#busy').textContent='Building PDF…';btn.disabled=false;autosplit()}
+};
+
+/* ---------- WhatsApp message ---------- */
+const KITS=[['Red & White','rw'],['Dark Blue','db'],['Red','r'],['Training kit','tk']];
+const HOME_PLACE='ATM Complex, Aqbulaq';
+const dmy=k=>{const [y,m,d]=k.split('-');return `${d}/${m}/${y}`};
+const todayK=()=>key(new Date());
+function waTeam(m){const g=gen(m.gen);return `${teamYear(g)||(g?g.code:'')} ATM “${m.filial?'B':'A'}”`}
+function waOpp(m){
+  if(m.type==='training')return 'Training match'+(m.note?' · '+m.note:'');
+  const c=comp(m.comp), r=m.rival||'opponent TBC';
+  const head=m.intra?'Internal match':!c?'Match':c.id==='fri'?'Friendly match':c.name;
+  return `${head} vs ${r}${m.home?'':' (away)'}${m.pend?' (PENDING CONFIRMATION)':''}`;
+}
+function waPlace(m){return m.place||(m.home?(groundOf(m)==='Aqbulaq'?HOME_PLACE:groundOf(m)):(m.region||'TBC'))}
+const hasRes=m=>m.type==='match'&&Number.isFinite(m.gf)&&Number.isFinite(m.ga);
+const resWDL=m=>!hasRes(m)?'':m.gf>m.ga?'W':m.gf<m.ga?'L':'D';
+function waWhen(m){
+  if(m.tbd){const sun=key(addD(parse(m.date),1));return `Weekend ${dmy(m.date)} / ${dmy(sun)} - date TBC`}
+  return `${DOWL[dowi(parse(m.date))]} ${dmy(m.date)} - ${m.time?m.time+'h':'time TBC'}`;
+}
+function waBlock(m){
+  const L=['⚽️ '+waTeam(m),'Match and opponent: '+waOpp(m),'Date and time: '+waWhen(m),'Place: '+waPlace(m),'Uniform kit: '+(m.kit||''),'Ask for referee: '+(m.ref?'Yes':'No')];
+  if(m.link)L.push(m.link);
+  return L.join('\n');
+}
+const gi=m=>{const i=S.gens.findIndex(g=>g.id===m.gen);return i<0?99:i};
+const sortTeam=(a,b)=>gi(a)-gi(b)||(a.filial-b.filial)||(a.time||'99').localeCompare(b.time||'99');
+function waRange(k,span){
+  if(span==='day')return [k,k];
+  if(span==='week'){const p=parse(k);const mon=addD(p,-dowi(p));return [key(mon),key(addD(mon,6))]}
+  const sat=saturdayOf(k);return [sat,key(addD(parse(sat),1))];
+}
+function waList(k,span){
+  const [a,b]=waRange(k,span);
+  return S.matches.filter(m=>!isSpan(m)&&(m.tbd?(span!=='day'&&m.date>=a&&m.date<=b):(m.date>=a&&m.date<=b))).slice().sort((x,y)=>x.date.localeCompare(y.date)||sortTeam(x,y));
+}
+function waText(list,k,span){
+  if(!list.length)return '';
+  const [a,b]=waRange(k,span);
+  const days=[...new Set(list.filter(m=>!m.tbd).map(m=>m.date))];
+  if(days.length<=1&&!list.some(m=>m.tbd))return 'MATCHES ORGANIZATION\n'+dmy(days[0])+'\n\n'+list.slice().sort(sortTeam).map(waBlock).join('\n\n');
+  let out='MATCHES ORGANIZATION\n'+(a===b?dmy(a):dmy(a)+' - '+dmy(b));
+  for(const d of days.sort()){out+='\n\n📅 '+DOWL[dowi(parse(d))].toUpperCase()+' '+dmy(d)+'\n\n'+list.filter(m=>!m.tbd&&m.date===d).sort(sortTeam).map(waBlock).join('\n\n')}
+  const tb=list.filter(m=>m.tbd);
+  if(tb.length)out+='\n\n📅 DATE TBC\n\n'+tb.sort(sortTeam).map(waBlock).join('\n\n');
+  return out;
+}
+function nextMatchDay(){
+  const t=todayK();const ds=S.matches.filter(m=>!isSpan(m)).map(m=>m.date).sort();
+  return ds.find(d=>d>=t)||ds[ds.length-1]||t;
+}
+function openWA(){
+  let k=nextMatchDay(), span='we';
+  dlg.classList.add('wide');
+  dlg.innerHTML=`<h2>WhatsApp message<small>Pick the day or weekend, choose each team's kit, then copy or open WhatsApp.</small></h2>
+  <div class="row"><div class="field"><label for="wa-d">Date</label><input type="date" id="wa-d" class="inp" value="${k}"></div>
+  <div class="field"><span class="lbl">Range</span><div class="seg" role="radiogroup" aria-label="Range"><label><input type="radio" name="wsp" id="wa-day" value="day">Day</label><label><input type="radio" name="wsp" id="wa-we" value="we" checked>Weekend</label></div></div></div>
+  <div class="kitrows" id="wa-kits"></div>
+  <div class="msgbox" id="wa-msg"></div>
+  <p class="hint" id="wa-hint"></p>
+  <textarea id="wa-fb" class="inp" rows="6" readonly hidden aria-label="Message to copy"></textarea>
+  <div class="acts"><button class="btn" id="wa-x">Close</button><span class="sp"></span><a class="btn wa" id="wa-open" href="https://wa.me/" target="_blank" rel="noopener">Open in WhatsApp</a><button class="btn pri" id="wa-copy">Copy message</button></div>`;
+  ov.hidden=false;
+  const draw=()=>{
+    const list=waList(k,span);const txt=waText(list,k,span);
+    $('#wa-kits').innerHTML=owner?list.map(m=>`<div class="kitrow" data-id="${m.id}"><span class="who">${esc(waTeam(m))}<small>${esc(m.tbd?'Date TBC':DOWL[dowi(parse(m.date))].slice(0,3)+' '+(m.time||'time TBC'))} · ${esc(waOpp(m))}</small></span>
+      <span class="kits">${KITS.map(([v,c])=>`<button type="button" class="kit" data-kit="${esc(v)}" aria-pressed="${m.kit===v}"><span class="ksw ${c}"></span>${v}</button>`).join('')}<button type="button" class="refb" data-ref aria-pressed="${!!m.ref}">Referee: ${m.ref?'Yes':'No'}</button></span></div>`).join(''):'';
+    $('#wa-msg').textContent=txt||'No matches on this '+(span==='day'?'day':'weekend')+'.';
+    $('#wa-open').href='https://wa.me/?text='+encodeURIComponent(txt);
+    const miss=list.filter(m=>!m.kit).length;
+    $('#wa-hint').innerHTML=!list.length?'':miss?`<span class="wa-miss">Kit not chosen for ${miss} team${miss>1?'s':''}.</span> You can still send it; that line stays empty.`:'All teams have a kit.';
+    $('#wa-fb').hidden=true;
+    return txt;
+  };
+  draw();
+  $('#wa-d').onchange=e=>{if(e.target.value){k=e.target.value;draw()}};
+  $('#wa-day').onchange=$('#wa-we').onchange=()=>{span=$('#wa-day').checked?'day':'we';draw()};
+  $('#wa-kits').onclick=e=>{
+    const row=e.target.closest('.kitrow');if(!row||!owner)return;const m=S.matches.find(x=>x.id===row.dataset.id);if(!m)return;
+    const kb=e.target.closest('[data-kit]');const rb=e.target.closest('[data-ref]');
+    if(kb)m.kit=m.kit===kb.dataset.kit?'':kb.dataset.kit;else if(rb)m.ref=!m.ref;else return;
+    draw();render();save();
+  };
+  $('#wa-x').onclick=()=>{dlg.classList.remove('wide');close()};
+  $('#wa-copy').onclick=()=>{
+    const txt=waText(waList(k,span),k,span);if(!txt)return;
+    const fb=()=>{const ta=$('#wa-fb');ta.hidden=false;ta.value=txt;ta.focus();ta.select();$('#wa-hint').textContent='Copying is blocked here: select the text below and copy it.'};
+    try{navigator.clipboard.writeText(txt).then(()=>{$('#wa-copy').textContent='Copied ✓';setTimeout(()=>{const b=$('#wa-copy');if(b)b.textContent='Copy message'},1800)},fb)}catch(err){fb()}
+  };
+}
+$('#wa').onclick=openWA;
+
+/* ---------- Matches organization view (same data as the calendar) ---------- */
+let moOn=false, moK=null, moSpan='we';
+function moTitle(){const [a,b]=waRange(moK,moSpan);if(a===b)return `${DOWL[dowi(parse(a))]} <span>${dmy(a)}</span>`;return `${moSpan==='week'?'Week':'Weekend'} <span>${dmy(a).slice(0,5)} – ${dmy(b)}</span>`}
+function renderMO(){
+  if(!moK)moK=nextMatchDay();
+  $('#mo-d').value=moK;$('#mo-title').innerHTML=moTitle();
+  const list=waList(moK,moSpan);
+  {const [ta,tb]=waRange(moK,moSpan);const tl=S.matches.filter(m=>m.type==='tour'&&m.date<=tb&&(m.end||m.date)>=ta);$('#mo-tours').innerHTML=tl.map(m=>`<div class="mo-tour">🏆 ${flagHtml(m.cc)} <b>${esc(m.name||'International tournament')}</b>${tPlace(m,1)?' · '+esc(tPlace(m,1)):''} · ${esc(gen(m.gen)?teamLabel(m):'All teams')} · ${dmy(m.date).slice(0,5)}${m.end&&m.end>m.date?' – '+dmy(m.end).slice(0,5):''}</div>`).join('')}
+  if(!list.length){$('#mo-cards').innerHTML=`<div class="mo-empty"><b>No matches here.</b><br>Pick another date, or add one with “+ Add match”.</div>`}
+  else{let h='',last=null;
+    for(const m of list){
+      const day=m.tbd?'TBC':m.date;
+      if(moSpan!=='day'&&day!==last){h+=`<div class="mo-day">${m.tbd?'Date TBC · weekend '+dmy(m.date):DOWL[dowi(parse(m.date))]+' '+dmy(m.date)}</div>`;last=day}
+      const g=gen(m.gen);const base=g?g.color:'#8A8FA3';const tc=m.filial?light(base):base;
+      h+=`<article class="mcard" data-id="${m.id}" style="--tc:${tc};--tf:${ink(tc)}">
+        <div><div class="mc-team">⚽ ${esc(waTeam(m))}<span class="code">${esc(teamLabel(m))}</span></div><div class="mc-opp">${crestM(m)}${esc(waOpp(m).replace(' (PENDING CONFIRMATION)',''))} ${m.pend?'<span class="mc-pend">PENDING</span>':''}</div><div class="mc-meta">📍 ${esc(waPlace(m))}</div></div>
+        <div class="mc-time">${esc(m.tbd?'TBC':(m.time||'--:--'))}<small>${esc(m.tbd?'date TBC':DOWL[dowi(parse(m.date))].slice(0,3)+' '+dmy(m.date).slice(0,5))}</small></div>
+        <div class="mc-row"><span class="kits">${KITS.map(([v,c])=>`<button type="button" class="kit" data-kit="${esc(v)}" aria-pressed="${m.kit===v}"><span class="ksw ${c}"></span>${v}</button>`).join('')}</span>${m.kit?'':'<span class="pill warn">No kit chosen</span>'}</div>
+        ${m.type==='match'?`<div class="mc-row"><span class="mres">Result: ATM <input type="number" min="0" max="99" inputmode="numeric" class="inp" data-gf value="${hasRes(m)?m.gf:''}" aria-label="ATM goals"> – <input type="number" min="0" max="99" inputmode="numeric" class="inp" data-ga value="${hasRes(m)?m.ga:''}" aria-label="Opponent goals"> Opp.</span>${hasRes(m)?`<span class="wdl ${resWDL(m)}">${{W:'Win',D:'Draw',L:'Loss'}[resWDL(m)]}</span>`:''}</div>`:''}<div class="mc-row"><button type="button" class="refb" data-ref aria-pressed="${!!m.ref}">Referee: ${m.ref?'Yes':'No'}</button>${m.link?`<a href="${esc(m.link)}" target="_blank" rel="noopener">${esc(m.link.replace(/^https?:\/\/(www\.)?/,''))}</a>`:''}<span class="sp"></span><button type="button" class="btn" data-edit>Edit</button></div>
+      </article>`}
+    $('#mo-cards').innerHTML=h}
+  renderCK();renderMiniCal();
+  const txt=waText(list,moK,moSpan);
+  $('#mo-msg').textContent=txt||'No matches in this range.';
+  $('#mo-open').href='https://wa.me/?text='+encodeURIComponent(txt);
+  const miss=list.filter(m=>!m.kit).length;
+  $('#mo-hint').innerHTML=!list.length?'':miss?`<span class="wa-miss">Kit not chosen for ${miss} team${miss>1?'s':''}.</span> You can still send it; that line stays empty.`:'All teams have a kit.';
+  $('#mo-fb').hidden=true;
+}
+const CHECKS=[['ref','Referees',['Yes','No','No need']],['kits','Kits',['Yes','No']],['coaches','Coaches roles',['Yes','No']],['transport','Transport',['Yes','No']]];
+function ckKey(){return saturdayOf(moK||nextMatchDay())}
+function ckText(){
+  const sat=ckKey(),sun=key(addD(parse(sat),1));const c=(S.checks||{})[sat]||{};
+  const n=waList(sat,'we').filter(m=>m.type!=='training').length;
+  return 'WEEKEND MATCHES\n'+dmy(sat)+' - '+dmy(sun)+(n?' · '+n+' match'+(n>1?'es':''):'')+'\n\n'+CHECKS.map(([k,l])=>l+': '+(c[k]||'Pending')).join('\n');
+}
+function renderCK(){
+  const sat=ckKey();const c=(S.checks||{})[sat]||{};
+  $('#ck-t').textContent='Weekend checklist · '+dmy(sat).slice(0,5)+' – '+dmy(key(addD(parse(sat),1))).slice(0,5);
+  $('#ck-rows').innerHTML=CHECKS.map(([k,l,opts])=>`<div class="ckrow"><b>${l}</b><div class="seg" role="radiogroup" aria-label="${l}">${opts.map(o=>`<label><input type="radio" name="ck-${k}" data-ck="${k}" value="${o}" ${c[k]===o?'checked':''} ${owner?'':'disabled'}>${o}</label>`).join('')}</div></div>`).join('');
+  const t=ckText();$('#ck-msg').textContent=t;$('#ck-open').href='https://wa.me/?text='+encodeURIComponent(t);$('#ck-fb').hidden=true;
+}
+let mcMonth=null;
+function renderMiniCal(){
+  if(!mcMonth){const p=parse(moK);mcMonth=new Date(p.getFullYear(),p.getMonth(),1)}
+  const y=mcMonth.getFullYear(),mo=mcMonth.getMonth();
+  $('#mc-lbl').textContent=MESES[mo]+' '+y;
+  const has=new Set();S.matches.forEach(m=>{if(m.type==='holiday')return;has.add(m.date);if(m.tbd)has.add(key(addD(parse(m.date),1)))});
+  const [ra,rb]=waRange(moK,moSpan);const t=todayK();
+  const start=addD(mcMonth,-dowi(mcMonth));
+  let h=['M','T','W','T','F','S','S'].map(d=>`<span class="wd">${d}</span>`).join('');
+  for(let i=0;i<42;i++){const d=addD(start,i);const k=key(d);
+    const c=[d.getMonth()!==mo?'out':'',dowi(d)>4?'we':'',has.has(k)?'has':'',k===moK?'sel':'',k>=ra&&k<=rb?'inr':'',k===t?'today':''].join(' ');
+    h+=`<button type="button" class="${c}" data-mcd="${k}" aria-label="${d.getDate()} ${MESES[d.getMonth()]}${has.has(k)?', has matches':''}">${d.getDate()}</button>`}
+  $('#mcal').innerHTML=h;
+}
+$('#mcal').onclick=e=>{const b=e.target.closest('[data-mcd]');if(!b)return;moK=b.dataset.mcd;moSpan='day';$('#mo-day').checked=true;const p=parse(moK);mcMonth=new Date(p.getFullYear(),p.getMonth(),1);renderMO()};
+$('#mc-prev').onclick=()=>{mcMonth=new Date(mcMonth.getFullYear(),mcMonth.getMonth()-1,1);renderMiniCal()};
+$('#mc-next').onclick=()=>{mcMonth=new Date(mcMonth.getFullYear(),mcMonth.getMonth()+1,1);renderMiniCal()};
+function showMO(on){
+  moOn=on;document.body.classList.toggle('mo-on',on);$('#mo').hidden=!on;
+  $('#tab-cal').setAttribute('aria-selected',!on);$('#tab-mo').setAttribute('aria-selected',on);
+  try{history.replaceState(null,'',on?'#matches':location.pathname+location.search)}catch(e){}
+  if(on)renderMO();
+}
+/* ---------- Team results view ---------- */
+let tvOn=false;
+function tvOpts(){
+  let cur='';try{cur=localStorage.getItem('cal2627-tv')||''}catch(e){}
+  const o=S.gens.map(g=>[[g.id+'|0',g.code+' · '+g.name]].concat(g.filial?[[g.id+'|1',fcode(g)+' · '+fname(g)]]:[])).flat();
+  if(!o.some(x=>x[0]===cur))cur=(o[0]||[''])[0];
+  $('#tv-team').innerHTML=o.map(([v,l])=>`<option value="${v}" ${v===cur?'selected':''}>${esc(l)}</option>`).join('');
+}
+function renderTV(){
+  if(!$('#tv-team').options.length)tvOpts();
+  const [gid,fl]=($('#tv-team').value||'|0').split('|');const filial=fl==='1';
+  const g=gen(gid);const base=g?g.color:'#8A8FA3';const tc=filial?light(base):base;
+  const t=todayK();
+  const mine=S.matches.filter(m=>m.gen===gid&&!!m.filial===filial).concat(S.matches.filter(m=>m.type==='match'&&m.intra===gid+'|'+(filial?1:0)).map(m=>{const x={...m,gen:gid,filial,intra:m.gen+'|'+(m.filial?1:0)};x.rival=ownName(x.intra);if(hasRes(m)){x.gf=m.ga;x.ga=m.gf}return x}));
+  const ms=mine.filter(m=>m.type==='match');
+  const past=ms.filter(m=>hasRes(m)||(!m.tbd&&m.date<t)).sort((a,b)=>b.date.localeCompare(a.date)||(b.time||'').localeCompare(a.time||''));
+  const next=ms.filter(m=>!hasRes(m)&&(m.tbd?key(addD(parse(m.date),1))>=t:m.date>=t)).sort((a,b)=>a.date.localeCompare(b.date)||(a.time||'99').localeCompare(b.time||'99'));
+  const tours=S.matches.filter(m=>m.type==='tour'&&(m.end||m.date)>=t&&(!m.gen||(m.gen===gid&&!!m.filial===filial)));
+  const res=past.filter(hasRes);const W=res.filter(m=>resWDL(m)==='W').length,D=res.filter(m=>resWDL(m)==='D').length,L=res.filter(m=>resWDL(m)==='L').length;
+  const GF=res.reduce((a,m)=>a+m.gf,0),GA=res.reduce((a,m)=>a+m.ga,0);
+  const form=res.slice(0,5).map(m=>`<span class="wdl ${resWDL(m)}">${resWDL(m)}</span>`).join('')||'–';
+  $('#tv-stats').innerHTML=[['Played',res.length],['Won',W],['Drawn',D],['Lost',L],['Goals for',GF],['Goals against',GA],['Goal diff',(GF-GA>0?'+':'')+(GF-GA)],['Points',W*3+D]].map(([l,v])=>`<div class="tv-st"><b>${v}</b><span>${l}</span></div>`).join('')+`<div class="tv-st form"><b>${form}</b><span>Form · latest first</span></div>`;
+  const dt=m=>{const d=parse(m.date);return m.tbd?`${d.getDate()} ${MESES[d.getMonth()].slice(0,3)}<small>weekend · TBC</small>`:`${d.getDate()} ${MESES[d.getMonth()].slice(0,3)}<small>${DOWL[dowi(d)].slice(0,3)} ${d.getFullYear()}</small>`};
+  const sub=m=>{const c=comp(m.comp);return [c?c.name:'',venueOf(m)?venueOf(m).replace(/ Region$/,''):'',m.pend?'PENDING':'',m.note&&(!c||m.note.toLowerCase()!==c.name.toLowerCase())?m.note:''].filter(Boolean).map(esc).join(' · ')};
+  const ha=m=>m.home?'<span class="hb h">HOME</span>':'<span class="hb a">AWAY</span>';
+  const row=(m,right)=>`<button type="button" class="tvr" data-id="${m.id}" style="--tc:${tc};--tf:${ink(tc)}"><span class="dt">${dt(m)}</span><span class="op">${ha(m)}${crestM(m)}${esc(m.rival||'Opponent TBC')}${rivCC(m)!=='KZ'&&m.rival?' '+flagHtml(rivCC(m)):''}<small>${sub(m)}</small></span>${right}</button>`;
+  const trow=m=>{const d=parse(m.date);return `<div class="tvr tour" style="--tc:#F2C230"><span class="dt">${d.getDate()} ${MESES[d.getMonth()].slice(0,3)}<small>${m.end&&m.end>m.date?'to '+shortDay(m.end):DOWL[dowi(d)].slice(0,3)}</small></span><span class="op">🏆 ${flagHtml(m.cc)} ${esc(m.name||'International tournament')}<small>${esc(tPlace(m,1))}${m.gen?'':(tPlace(m,1)?' · ':'')+'All teams'}</small></span><span></span></div>`};
+  const up=[...next.map(m=>({k:m.date,h:row(m,`<span class="tmx">${m.tbd?'TBC':esc(m.time||'Time TBC')}</span>`)})),...tours.map(m=>({k:m.date,h:trow(m)}))].sort((a,b)=>a.k.localeCompare(b.k));
+  $('#tv-next').innerHTML=up.length?up.map(x=>x.h).join(''):'<div class="tv-empty">No upcoming matches for this team.</div>';
+  $('#tv-past').innerHTML=past.length?past.map(m=>row(m,hasRes(m)?`<span class="rs">${m.gf}–${m.ga}<span class="wdl ${resWDL(m)}">${resWDL(m)}</span></span>`:'<span class="nr">No result yet</span>')).join(''):'<div class="tv-empty">No matches played yet.</div>';
+}
+function showTV(on){
+  if(on&&moOn)showMO(false);
+  tvOn=on;document.body.classList.toggle('tv-on',on);$('#tv').hidden=!on;
+  $('#tab-tv').setAttribute('aria-selected',on);$('#tab-cal').setAttribute('aria-selected',!on&&!moOn);
+  if(on){tvOpts();renderTV();try{history.replaceState(null,'','#team')}catch(e){}}
+  else if(!moOn){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}
+}
+$('#tv-team').onchange=()=>{try{localStorage.setItem('cal2627-tv',$('#tv-team').value)}catch(e){}renderTV()};
+$('#tv').onclick=e=>{const r=e.target.closest('.tvr[data-id]');if(!r||!owner)return;const m=S.matches.find(x=>x.id===r.dataset.id);if(m)openForm(m)};
+$('#tab-cal').onclick=()=>{showTV(false);showMO(false)};
+$('#tab-tv').onclick=()=>showTV(true);
+$('#tab-mo').onclick=()=>{showTV(false);showMO(true)};
+$('#mo-d').onchange=e=>{if(e.target.value){moK=e.target.value;const p=parse(moK);mcMonth=new Date(p.getFullYear(),p.getMonth(),1);renderMO()}};
+['mo-day','mo-we','mo-wk'].forEach(id=>$('#'+id).onchange=e=>{moSpan=e.target.value;renderMO()});
+$('#mo-add').onclick=()=>openForm(null,moK||nextMatchDay());
+$('#mo-cards').onchange=e=>{
+  const inp=e.target.closest('[data-gf],[data-ga]');if(!inp||!owner)return;const card=inp.closest('.mcard');const m=S.matches.find(x=>x.id===card.dataset.id);if(!m)return;
+  const a=card.querySelector('[data-gf]').value,b=card.querySelector('[data-ga]').value;
+  if(a!==''&&b!==''){m.gf=+a;m.ga=+b}else{delete m.gf;delete m.ga}
+  if(a===''||b==='')return save();
+  render();save();
+};
+$('#mo-cards').onclick=e=>{
+  const card=e.target.closest('.mcard');if(!card||!owner)return;const m=S.matches.find(x=>x.id===card.dataset.id);if(!m)return;
+  const kb=e.target.closest('[data-kit]'),rb=e.target.closest('[data-ref]'),eb=e.target.closest('[data-edit]');
+  if(eb)return openForm(m);
+  if(kb)m.kit=m.kit===kb.dataset.kit?'':kb.dataset.kit;else if(rb)m.ref=!m.ref;else return;
+  render();save();
+};
+$('#mo-copy').onclick=()=>{
+  const txt=waText(waList(moK,moSpan),moK,moSpan);if(!txt)return;
+  const fb=()=>{const ta=$('#mo-fb');ta.hidden=false;ta.value=txt;ta.focus();ta.select();$('#mo-hint').textContent='Copying is blocked here: select the text below and copy it.'};
+  try{navigator.clipboard.writeText(txt).then(()=>{$('#mo-copy').textContent='Copied ✓';setTimeout(()=>{$('#mo-copy').textContent='Copy message'},1800)},fb)}catch(err){fb()}
+};
+$('#ck-rows').onchange=e=>{const r=e.target.closest('[data-ck]');if(!r||!owner)return;const sat=ckKey();S.checks=S.checks||{};S.checks[sat]={...(S.checks[sat]||{}),[r.dataset.ck]:r.value};renderCK();save()};
+$('#ck-copy').onclick=()=>{const txt=ckText();
+  const fb=()=>{const ta=$('#ck-fb');ta.hidden=false;ta.value=txt;ta.focus();ta.select()};
+  try{navigator.clipboard.writeText(txt).then(()=>{$('#ck-copy').textContent='Copied ✓';setTimeout(()=>{$('#ck-copy').textContent='Copy checklist'},1800)},fb)}catch(err){fb()}};
+$('#mo-csv').onclick=()=>$('#csv').click();
+$('#mo-ics').onclick=()=>$('#ics').click();
+{const _r=render;render=function(){_r();if(moOn)renderMO();if(tvOn)renderTV()}}
+ov.addEventListener('click',e=>{if(e.target===ov)dlg.classList.remove('wide')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')dlg.classList.remove('wide')});
+
+/* ---------- CSV / ICS export ---------- */
+function exportList(){return S.matches.filter(m=>!isSpan(m)).slice().sort((a,b)=>a.date.localeCompare(b.date)||(a.time||'99').localeCompare(b.time||'99')||sortTeam(a,b))}
+function csvText(){
+  const H=['Date','Day','Time','Team','Type','Match and opponent','Competition','Home/Away','Place','ATM goals','Opponent goals','Score','Result','Uniform kit','Ask for referee','Stream','Note'];
+  const q=v=>{v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
+  const rows=exportList().map(m=>[dmy(m.date),m.tbd?'Weekend (date TBC)':DOWL[dowi(parse(m.date))],m.tbd?'':(m.time||'TBC'),waTeam(m),m.type==='training'?'Training':'Match',waOpp(m),(comp(m.comp)||{}).name||'',m.type==='training'?'':(m.home?'Home':'Away'),waPlace(m),hasRes(m)?m.gf:'',hasRes(m)?m.ga:'',hasRes(m)?m.gf+'-'+m.ga:'',resWDL(m),m.kit||'',m.ref?'Yes':'No',m.link||'',m.note||'']);
+  return '\ufeff'+[H,...rows].map(r=>r.map(q).join(',')).join('\r\n');
+}
+function icsText(){
+  const ie=s=>String(s||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/[,;]/g,c=>'\\'+c);
+  const stamp=new Date().toISOString().replace(/[-:]/g,'').slice(0,15)+'Z';
+  const f=x=>`${x.getFullYear()}${pad(x.getMonth()+1)}${pad(x.getDate())}T${pad(x.getHours())}${pad(x.getMinutes())}00`;
+  const ev=exportList().map(m=>{
+    const L=['BEGIN:VEVENT','UID:'+m.id+'@calendario-rojiblanco','DTSTAMP:'+stamp];
+    if(m.time&&!m.tbd){const [h,mi]=m.time.split(':').map(Number);const st=parse(m.date);st.setHours(h,mi);L.push('DTSTART:'+f(st),'DTEND:'+f(new Date(st.getTime()+90*60000)))}
+    else{L.push('DTSTART;VALUE=DATE:'+m.date.replace(/-/g,''),'DTEND;VALUE=DATE:'+key(addD(parse(m.date),m.tbd?2:1)).replace(/-/g,''))}
+    L.push('SUMMARY:'+ie('⚽ '+waTeam(m)+' · '+waOpp(m)),'LOCATION:'+ie(waPlace(m)),'DESCRIPTION:'+ie('Uniform kit: '+(m.kit||'-')+'\nAsk for referee: '+(m.ref?'Yes':'No')+(m.link?'\n'+m.link:'')+(m.tbd?'\nDate TBC (Sat/Sun)':'')+(!m.tbd&&!m.time?'\nTime TBC':'')));
+    if(m.link)L.push('URL:'+m.link);
+    L.push('END:VEVENT');return L.join('\r\n');
+  });
+  return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Calendario Rojiblanco//26-27//EN','CALSCALE:GREGORIAN','X-WR-CALNAME:Match Calendar 26/27',...ev,'END:VCALENDAR'].join('\r\n');
+}
+async function offerFile(filename,data){
+  let dl=null;try{dl=window.claude&&await window.claude.use('downloads')}catch(e){}
+  if(!dl){try{const blob=data instanceof Blob?data:new Blob([data],{type:'application/octet-stream'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);setStatus('· '+filename+' downloaded.')}catch(e){setStatus('· Downloads are not available in this view.')}return}
+  try{await dl.save({filename,data});setStatus('· '+filename+' ready.')}catch(e){if(!(e&&(e.code==='declined'||e.code==='cancelled')))setStatus('· Could not create '+filename+'. Try again.')}
+}
+function rowsX(){return exportList().map(m=>({'Date':dmy(m.date),'Day':m.tbd?'Weekend (date TBC)':DOWL[dowi(parse(m.date))],'Time':m.tbd?'':(m.time||'TBC'),'Team':waTeam(m),'Code':teamLabel(m),'Type':m.type==='training'?'Training':'Match','Opponent':m.type==='training'?'':(m.rival||'TBC'),'Competition':(comp(m.comp)||{}).name||'','Home/Away':m.type==='training'?'':(m.home?'Home':'Away'),'Place':waPlace(m),'ATM goals':hasRes(m)?m.gf:'','Opp. goals':hasRes(m)?m.ga:'','Score':hasRes(m)?m.gf+'-'+m.ga:'','Result':resWDL(m),'Status':m.type==='match'?(m.pend?'Pending':'Confirmed'):'','Uniform kit':m.kit||'','Referee':m.ref?'Yes':'No','Stream':m.link||'','Note':m.note||''}))}
+function summaryX(){
+  const by={};exportList().filter(hasRes).forEach(m=>{const k=teamLabel(m);const r=by[k]=by[k]||{'Team':waTeam(m),'Code':k,'Played':0,'W':0,'D':0,'L':0,'Goals for':0,'Goals against':0};r.Played++;r[resWDL(m)]++;r['Goals for']+=m.gf;r['Goals against']+=m.ga});
+  return Object.values(by).map(r=>({...r,'Goal diff':r['Goals for']-r['Goals against'],'Points':r.W*3+r.D}));
+}
+function loadXLSX(){return window.XLSX?Promise.resolve():new Promise((ok,ko)=>{const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';sc.onload=ok;sc.onerror=ko;document.head.appendChild(sc)})}
+$('#csv').onclick=async()=>{
+  try{await loadXLSX()}catch(e){return offerFile('match-calendar-2026-27.csv',csvText())}
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.json_to_sheet(rowsX());ws['!cols']=[11,11,7,16,7,8,26,18,10,22,9,9,7,7,13,8,30,18].map(w=>({wch:w}));XLSX.utils.book_append_sheet(wb,ws,'Matches');
+  const sm=summaryX();const ws2=sm.length?XLSX.utils.json_to_sheet(sm):XLSX.utils.aoa_to_sheet([['No results entered yet']]);ws2['!cols']=[18,8,7,5,5,5,10,13,9,7].map(w=>({wch:w}));XLSX.utils.book_append_sheet(wb,ws2,'Results by team');
+  const out=XLSX.write(wb,{bookType:'xlsx',type:'array'});
+  offerFile('match-calendar-2026-27.xlsx',new Blob([out],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+};
+$('#ics').onclick=()=>offerFile('match-calendar-2026-27.ics',icsText());
+
+/* ---------- boot ---------- */
+$('#months').innerHTML=SEASON.map(([y,m],i)=>`<a href="#m${i}">${MESES[m].slice(0,3)} ${String(y).slice(2)}</a>`).join('');
+let rt;new ResizeObserver(()=>{clearTimeout(rt);rt=setTimeout(autosplit,120)}).observe($('#pages'));
+if(document.fonts)document.fonts.ready.then(()=>fit());
+
+let tryEdit=false;
+async function enableEdit(silent){
+  let a=null;try{a=window.claude&&await window.claude.use('artifact')}catch(e){}
+  if(!a){if(!silent){$('#accnote').textContent='Saving is not available in this view. Open the calendar inside Claude (claude.ai or the Claude app), signed in with your invited email.'}return}
+  art=a;tryEdit=true;owner=true;remoteOK=true;
+  try{localStorage.setItem('cal2627-edit','1')}catch(e){}
+  document.body.classList.remove('ro');$('#accbox').hidden=true;
+  setStatus('· Editor mode. Your changes save for everyone.');
+  renderTeams();renderComps();renderClubs();render();
+}
+async function revertEdit(code){
+  tryEdit=false;owner=false;art=null;
+  try{localStorage.removeItem('cal2627-edit')}catch(e){}
+  document.body.classList.add('ro');showMO(false);$('#accbox').hidden=false;
+  $('#accnote').textContent='Your change was not saved: this Claude account does not have edit access ('+(code||'no permission')+'). Ask the owner to give your email “Can edit” in Share.';
+  try{const r=await fetch('data.json?t='+Date.now(),{cache:'no-store'});if(r.ok){S=await r.json();S.matches=S.matches||[];if(!S.comps)S.comps=DEFAULT_COMPS.map(c=>({...c}));try{localStorage.removeItem(LSKEY)}catch(e){}render()}}catch(e){}
+}
+$('#editme').onclick=()=>enableEdit(false);
+async function boot(){
+  fetch('crests.json').then(r=>r.ok?r.json():{}).then(j=>{CRESTS=j||{};render();renderClubs();if(tvOn)renderTV()}).catch(()=>{});
+  let remote=null;
+  try{const r=await fetch('data.json?t='+Date.now(),{cache:'no-store'});if(r.ok)remote=await r.json()}catch(e){}
+  const local=readLocal();
+  S=(local&&(!remote||(local.savedAt||0)>(remote.savedAt||0)))?local:(remote||local||S);
+  if(!S.gens||!S.gens.length)S.gens=[2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019].map((y,i)=>({id:'g'+y,code:String(y).slice(2),name:'Age group '+y,color:FALLBACK_COLORS[i],filial:true}));
+  S.matches=S.matches||[];
+  $('#club').value=S.club||'';$('#logodel').hidden=!S.logo;
+  if(!S.comps)S.comps=DEFAULT_COMPS.map(c=>({...c}));
+  if(!S.clubs){const seen=new Map();S.matches.forEach(m=>{if(m.type&&m.type!=='match')return;const c=splitRival(m.rival).club;if(c&&!/to be confirmed|tbc/i.test(c)&&!seen.has(c.toLowerCase()))seen.set(c.toLowerCase(),c)});S.clubs=[...seen.values()]}
+  renderTeams();renderComps();renderClubs();render();
+  let who='none';
+  try{if(window.claude&&window.claude.use){const u=await window.claude.use('user');
+    if(u){who='viewer';let o=false,c=false;try{o=await u.isOwner()}catch(e){}try{c=await u.canEdit()}catch(e){}owner=!!(o||c);if(owner)who=o?'owner':'editor'}}}catch(e){owner=false}
+  {const n=$('#accnote');$('#accbox').hidden=owner;if(n){n.textContent=who==='none'?'View only · Editors: open this page signed in to Claude with the invited email, then reload.':'View only · Your Claude account can only view this calendar. Ask the owner to give this email edit access in Share, then reload.'}}
+  document.body.classList.toggle('ro',!owner);
+  if(owner&&location.hash==='#matches')showMO(true);
+  if(location.hash==='#team')showTV(true);
+  if(!owner&&remote){S=remote;S.matches=S.matches||[];if(!S.comps)S.comps=DEFAULT_COMPS.map(c=>({...c}));try{localStorage.removeItem(LSKEY)}catch(e){}render();fetch('logos.json').then(r=>r.ok?r.json():null).then(L=>{if(!L)return;if(!S.logo&&L.logo)S.logo=L.logo;(S.comps||[]).forEach(c=>{if(!c.logo&&L.comps&&L.comps[c.id])c.logo=L.comps[c.id]});render();if(tvOn)renderTV()}).catch(()=>{})}
+  if(owner){try{art=await window.claude.use('artifact');setStatus(art?'':'· Changes are saved in this browser.')}catch(e){art=null}}
+  else{let pref=false;try{pref=localStorage.getItem('cal2627-edit')==='1'}catch(e){}if(pref)enableEdit(true)}
+}
+boot();
+})();
+</script>
+
+
+</body></html>
